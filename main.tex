@@ -1,0 +1,87 @@
+\documentclass[11pt,aspectratio=169,english]{beamer}
+
+\usetheme[progressbar=frametitle,numbering=fraction]{metropolis}
+\usecolortheme{spruce}
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage[normalem]{ulem}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{fontawesome5}
+\usepackage{multirow}
+\usepackage{tabularx}
+
+\newcommand{\sliderefmark}[1]{\textsuperscript{\textbf{[#1]}}}
+\newcommand{\sliderefentry}[2]{\textcolor{structure.fg}{\textbf{[#1]}}~#2}
+\newcommand{\figsource}[1]{{\fontsize{5.2}{6}\selectfont \emph{Source:} #1}}
+
+\newcommand{\iconNN}{%
+  \tikz[baseline=-0.5ex,scale=0.18,line width=0.7pt]{
+    \foreach \y in {1.5,0,-1.5}
+      \draw[fill=black] (-2,\y) circle (6pt);
+    \foreach \y in {0.75,-0.75}
+      \draw[fill=black] (0,\y) circle (6pt);
+    \draw[fill=black] (2,0) circle (6pt);
+    \foreach \yin in {1.5,0,-1.5}
+      \foreach \yhid in {0.75,-0.75} {
+        \draw (-2,\yin)--(0,\yhid);
+      }
+    \foreach \yhid in {0.75,-0.75}
+      \draw (0,\yhid)--(2,0);
+  }}
+
+\definecolor{defbg}{RGB}{230,243,255}
+\definecolor{takebg}{RGB}{255,235,235}
+\setbeamercolor{defbox}{bg=defbg,fg=black}
+\setbeamercolor{takebox}{bg=takebg,fg=black}
+
+\newcommand{\titlelogoheight}{0.54cm}
+
+\title{Presentation Title}
+\subtitle{Optional Subtitle}
+\author{Author Name}
+\institute{Affiliation}
+\date{NOMS 2026}
+
+\begin{document}
+
+\begin{frame}[plain,noframenumbering]
+  \begin{flushright}
+    \includegraphics[height=\titlelogoheight]{figures/logo/Inr_logo_fr_rouge.png}\hspace{0.45em}%
+    \includegraphics[height=\titlelogoheight]{figures/logo/Logo_loria_abrege_couleur.png}\hspace{0.45em}%
+    \includegraphics[height=\titlelogoheight]{figures/logo/Logo-universite-de-lorraine.png}
+  \end{flushright}
+
+  \vspace{-0.35em}
+  \centering
+  {\usebeamerfont{title}\usebeamercolor[fg]{title}\Large\bfseries\inserttitle\par}
+
+  \vspace{0.25em}
+  {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\large\insertsubtitle\par}
+
+  \vspace{0.45em}
+  {\large\insertauthor\par}
+
+  \vspace{0.15em}
+  {\footnotesize\insertinstitute\par}
+
+  \vfill
+  {\small\insertdate\par}
+\end{frame}
+
+\input{sections/introduction}
+\input{sections/background}
+\input{sections/method}
+\input{sections/results}
+\input{sections/conclusion}
+
+\begin{frame}[standout]
+  Questions?
+\end{frame}
+
+\end{document}
