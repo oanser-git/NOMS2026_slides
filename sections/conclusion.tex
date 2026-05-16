@@ -1,0 +1,45 @@
+\section{Conclusion}
+
+\begin{frame}{Takeaway}
+    \small
+    \begin{columns}[T,onlytextwidth]
+        \column{0.57\linewidth}
+        \begin{itemize}
+            \setlength\itemsep{0.8em}
+            \item Retraining alone does not guarantee robustness when hyperparameters stay fixed.
+            \item Configuration reuse under context changes can remove roughly one third of discrimination power.
+            \item AD IDS need automated reconfiguration, not a one-time setup.
+        \end{itemize}
+
+        \column{0.38\linewidth}
+        \setbeamercolor{takebox}{use={structure,normal text},
+            fg=normal text.fg,
+            bg=structure.fg!10!normal text.bg}
+        \begin{beamercolorbox}[wd=\linewidth,sep=1.2ex,rounded=true]{takebox}
+            \textbf{Next direction}\par
+            \vspace{0.35em}
+            Trigger reconfiguration only when a lightweight change detector reports enough traffic change.
+        \end{beamercolorbox}
+    \end{columns}
+
+    \vfill
+    \centering
+    {\color{structure.fg}\normalsize
+        \(\Longrightarrow\) Treat the configuration as an operational asset to monitor.}
+\end{frame}
+
+\begin{frame}{Acknowledgments}
+    \small
+    \begin{itemize}
+        \setlength\itemsep{0.8em}
+        \item Partial support from the French National Research Agency (ANR) through the France 2030 initiative:
+              \textbf{Superviz}, ANR-22-PECY-0008.
+        \item Additional support from the Luxembourg National Research Fund (FNR):
+              \textbf{C23/IS/18088425/COCTEL}.
+    \end{itemize}
+
+    \vfill
+    \centering
+    {\footnotesize\color{black!65}
+        The opinions expressed are those of the authors and do not necessarily reflect the views of the French government.}
+\end{frame}

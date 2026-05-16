@@ -1,0 +1,41 @@
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[font=\sffamily\scriptsize,line width=0.58pt]
+    \definecolor{safegreen}{RGB}{42,150,95}
+    \definecolor{riskorange}{RGB}{227,130,42}
+    \definecolor{alertred}{RGB}{210,72,82}
+    \definecolor{plotblue}{RGB}{42,122,188}
+
+    \tikzset{
+        panel/.style={rounded corners=7pt,draw=#1!38,fill=#1!7,inner sep=7pt},
+        card/.style={rounded corners=5pt,draw=#1!45,fill=#1!9,align=left,inner xsep=7pt,inner ysep=5pt,font=\tiny},
+        tag/.style={rounded corners=4pt,draw=#1!50,fill=#1!10,align=center,inner xsep=7pt,inner ysep=4pt,font=\tiny}
+    }
+
+    \path[use as bounding box] (0,0) rectangle (15.8,7.05);
+
+    \node[panel=black,draw=black!16,fill=black!2,minimum width=10.68cm,minimum height=6.78cm,anchor=north west] at (0.15,6.93) {};
+    \node[anchor=north west,font=\bfseries\small,text=black!78] at (0.48,6.60)
+        {Transfer loss from daily-optimal configurations};
+    \node[anchor=north west,font=\tiny,text=black!56] at (0.48,6.23)
+        {Each box is one target day \(R_i\): all source-day configurations \(\theta_j^{\star}\), \(j\neq i\).};
+
+    \node[anchor=north west,inner sep=0pt] at (0.56,5.94)
+        {\includegraphics[height=5.68cm,keepaspectratio]{../noms2026/sections/figures/transferability_box_plot.pdf}};
+
+    \node[panel=plotblue,minimum width=4.60cm,minimum height=6.78cm,anchor=north west] at (11.03,6.93) {};
+    \node[anchor=north west,font=\bfseries\small,text=plotblue!72!black] at (11.34,6.60)
+        {How to read};
+
+    \node[card=safegreen,minimum width=3.88cm] at (13.34,5.62)
+        {\textbf{Low median}\\small loss for most transfers.};
+    \node[card=riskorange,minimum width=3.88cm] at (13.34,4.38)
+        {\textbf{Wide box}\\source-day choice matters.};
+    \node[card=alertred,minimum width=3.88cm] at (13.34,3.14)
+        {\textbf{Large outliers}\\loss can approach 40\%.};
+    \node[card=black,draw=black!24,fill=black!4,minimum width=3.88cm] at (13.34,1.88)
+        {\textbf{Deployment risk}\\risky days: 5--7 and 10.};
+
+    \node[tag=safegreen,minimum width=3.92cm] at (13.34,0.62)
+        {more stable: days 0--4, 8, 9, 11--13};
+\end{tikzpicture}%
+}

@@ -1,0 +1,106 @@
+\resizebox{0.96\linewidth}{!}{%
+\begin{tikzpicture}[font=\sffamily\scriptsize,line width=0.55pt]
+    \definecolor{benignblue}{RGB}{42,122,188}
+    \definecolor{attackred}{RGB}{215,90,75}
+    \definecolor{methodaccent}{RGB}{82,92,125}
+    \definecolor{configviolet}{RGB}{82,92,125}
+    \definecolor{bogreen}{RGB}{82,92,125}
+    \definecolor{metricorange}{RGB}{82,92,125}
+
+    \tikzset{
+        panel/.style={rounded corners=6pt,draw=black!12,fill=black!2},
+        box/.style={rounded corners=5pt,draw=#1!38,fill=#1!9,align=center,inner xsep=6pt,inner ysep=5pt},
+        fold/.style={rounded corners=1pt,draw=white,line width=0.35pt,minimum width=0.28cm,minimum height=0.30cm,inner sep=0pt},
+        arrow/.style={->,draw=black!48,line width=0.75pt},
+        coloredarrow/.style={->,draw=#1!70,line width=0.75pt},
+        micro/.style={font=\tiny,text=black!62},
+        every node/.style={text=black!84}
+    }
+
+    % Fixed panels keep overlays stable.
+    \draw[panel] (0,0.20) rectangle (4.05,5.85);
+    \draw[panel] (4.35,0.20) rectangle (8.10,5.85);
+    \draw[panel] (8.40,0.20) rectangle (12.35,5.85);
+
+    % Step 1: detector path.
+    \visible<1->{
+        \node[anchor=west,font=\bfseries,text=structure.fg] at (0.28,5.48) {1. Detector};
+        \node[anchor=west,font=\bfseries,text=benignblue!70!black] at (0.55,4.82) {benign training flows};
+        \foreach \i in {0,1,2,3,4}{
+            \node[fold,fill=benignblue!76] at ({0.75+0.36*\i},4.40) {};
+        }
+        \draw[arrow] (2.35,4.30) .. controls (2.76,4.08) and (3.06,3.64) .. (3.25,3.30);
+        \node[font=\tiny,text=black!64] at (3.08,4.04) {train};
+
+        \draw[box=metricorange,line width=0.70pt] (2.80,2.42) rectangle (3.82,3.30);
+        \node[font=\bfseries,text=metricorange!72!black] at (3.31,2.98) {IF};
+        \node[font=\tiny,text=metricorange!70!black] at (3.31,2.64) {$h_{\theta}$};
+        \draw[draw=metricorange!60,line width=0.55pt] (3.06,3.30) -- (2.92,3.56) -- (3.12,3.56);
+        \draw[draw=metricorange!60,line width=0.55pt] (3.56,3.30) -- (3.70,3.56) -- (3.50,3.56);
+
+        \draw[coloredarrow=metricorange,rounded corners=5pt]
+            (3.82,2.78) -- (4.18,2.78) -- (4.18,0.04) -- (8.28,0.04) -- (8.28,2.56) -- (8.62,2.56);
+        \draw[rounded corners=4pt,draw=metricorange!36,fill=metricorange!6] (8.48,2.12) rectangle (11.02,3.04);
+        \node[anchor=west,font=\scriptsize\bfseries,text=metricorange!75!black] at (8.70,2.82) {evaluation flows};
+        \node[anchor=west,font=\tiny,text=black!62] at (8.70,2.55) {benign + attacks};
+        \foreach \x/\c in {8.92/benignblue!72,9.24/benignblue!72,9.56/attackred!72,9.88/attackred!72}{
+            \node[fold,fill=\c,minimum width=0.24cm,minimum height=0.27cm] at (\x,2.28) {};
+        }
+        \draw[coloredarrow=metricorange] (9.63,3.04) -- (9.63,3.56);
+        \node[anchor=west,font=\bfseries,text=metricorange!75!black] at (8.76,4.82) {anomaly scores};
+        \foreach \x/\h/\c in {9.00/0.25/benignblue!70,9.32/0.35/benignblue!70,9.64/0.42/benignblue!70,9.96/0.72/attackred!72,10.28/0.95/attackred!72}{
+            \draw[rounded corners=1pt,fill=\c,draw=white,line width=0.35pt] (\x,3.60) rectangle ++(0.20,\h);
+        }
+        \draw[draw=black!22] (8.88,3.60) -- (10.62,3.60);
+    }
+
+    % Step 2: configuration space as operational knobs.
+    \visible<3->{
+        \node[anchor=west,font=\bfseries,text=structure.fg] at (4.62,5.48) {2. HPs optimization};
+        \node[box=configviolet,minimum width=2.34cm,minimum height=0.74cm] (theta) at (6.18,4.66)
+            {{\footnotesize $\theta \in \Theta$}\\[-0.07em]{\scriptsize seven IF hyperparameters}};
+
+        \draw[rounded corners=5pt,draw=configviolet!20,fill=configviolet!3] (4.60,1.08) rectangle (7.86,4.06);
+        \node[anchor=west,font=\scriptsize,text=configviolet!72!black] at (4.84,3.82) {operational effects};
+        \foreach \y/\lab/\pos in {3.10/Tree count and depth/5.90,2.34/Split granularity/6.45,1.58/Feature combinations/6.92}{
+            \draw[rounded corners=3pt,draw=configviolet!36,fill=configviolet!7] (4.76,\y-0.31) rectangle (7.70,\y+0.31);
+            \node[anchor=west,font=\tiny,text=black!70] at (4.98,\y+0.16) {\lab};
+            \draw[draw=configviolet!45,line width=1.25pt] (5.08,\y-0.12) -- (7.42,\y-0.12);
+            \draw[fill=configviolet!75,draw=white,line width=0.35pt] (\pos,\y-0.12) circle (0.095);
+        }
+        \draw[coloredarrow=configviolet] (theta.south) -- (6.18,4.08);
+        \draw[coloredarrow=configviolet] (4.60,2.58) .. controls (4.18,3.06) and (3.96,3.08) .. (3.82,2.90);
+        \node[font=\tiny,text=configviolet!70!black] at (4.10,3.22) {sets};
+    }
+
+    % BO search appears after configuration optimization.
+    \visible<4->{
+        \node[anchor=west,font=\bfseries,text=bogreen!72!black] at (4.96,0.92) {BO oracle search};
+        \draw[box=bogreen,minimum width=1.20cm,minimum height=0.46cm] (5.18,0.26) rectangle (6.38,0.68);
+        \node[font=\bfseries,text=bogreen!72!black] at (5.78,0.47) {$BO(D_i)$};
+        \draw[rounded corners=3pt,draw=bogreen!35,fill=bogreen!7] (6.70,0.22) rectangle (7.46,0.76);
+        \node[anchor=west,font=\tiny,text=bogreen!72!black] at (6.78,0.66) {$\theta$};
+        \foreach \x/\y in {6.88/0.40,7.08/0.53,7.30/0.37}{
+            \draw[fill=bogreen!62,draw=white,line width=0.30pt] (\x,\y) circle (0.07);
+        }
+        \draw[coloredarrow=bogreen] (6.38,0.47) -- (6.70,0.47);
+        \draw[coloredarrow=bogreen] (7.46,0.50) .. controls (7.94,2.10) and (8.02,4.50) .. (theta.east);
+        \node[anchor=west,font=\bfseries,text=bogreen!72!black] at (7.63,4.85) {$\theta_i^{\star}$};
+    }
+
+    % Step 3: threshold-free robustness metric.
+    \visible<2->{
+        \node[anchor=west,font=\bfseries,text=structure.fg] at (8.70,5.48) {3. Robustness metric};
+        \draw[rounded corners=2pt,draw=black!18,fill=white] (11.22,2.26) rectangle (12.25,3.00);
+        \draw[draw=black!35,line width=0.45pt] (11.33,2.38) -- (12.11,2.84);
+        \draw[draw=structure.fg!78,line width=0.75pt] (11.33,2.38) .. controls (11.52,2.72) and (11.87,2.91) .. (12.11,2.94);
+        \draw[coloredarrow=metricorange,line width=0.85pt]
+            (10.62,3.60) .. controls (11.30,3.64) and (11.85,3.48) .. (11.85,3.05);
+        \node[anchor=west,font=\bfseries,text=structure.fg] at (11.02,3.28) {ROC curve};
+        \node[box=structure.fg,minimum width=1.72cm,minimum height=0.58cm] at (11.18,1.10)
+            {$p_{\text{robust}}=\mathrm{AUC}$};
+        \draw[arrow] (11.35,2.26) -- (11.25,1.40);
+        \node[anchor=west,font=\scriptsize,text=black!62] at (9.25,0.50) {try all thresholds $\tau$};
+    }
+\end{tikzpicture}%
+}

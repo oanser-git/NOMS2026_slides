@@ -1,0 +1,58 @@
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[font=\sffamily\scriptsize,line width=0.55pt]
+    \definecolor{dayblue}{RGB}{42,122,188}
+    \definecolor{methodaccent}{RGB}{82,92,125}
+    \definecolor{sampleorange}{RGB}{82,92,125}
+    \definecolor{configviolet}{RGB}{82,92,125}
+    \definecolor{scoregreen}{RGB}{82,92,125}
+
+    \tikzset{
+        day/.style={rounded corners=2pt,draw=dayblue!45,fill=dayblue!12,minimum width=0.66cm,minimum height=0.38cm,font=\bfseries\tiny,text=dayblue!65!black},
+        sample/.style={rounded corners=3pt,draw=sampleorange!42,fill=sampleorange!10,minimum width=1.15cm,minimum height=0.40cm,font=\tiny\bfseries,text=sampleorange!78!black,align=center},
+        bo/.style={rounded corners=3pt,draw=sampleorange!42,fill=sampleorange!10,minimum width=0.82cm,minimum height=0.40cm,font=\tiny\bfseries,text=sampleorange!78!black,align=center},
+        theta/.style={rounded corners=3pt,draw=configviolet!38,fill=configviolet!9,minimum width=1.95cm,minimum height=0.40cm,font=\tiny,text=configviolet!72!black,align=center},
+        result/.style={rounded corners=3pt,draw=scoregreen!38,fill=scoregreen!9,minimum width=3.38cm,minimum height=0.40cm,font=\tiny,align=center},
+        arrow/.style={->,draw=black!48,line width=0.65pt},
+        every node/.style={text=black!84}
+    }
+
+    \node[anchor=west,font=\tiny\bfseries,text=black!62] at (-0.04,2.63) {day};
+    \node[anchor=west,font=\tiny\bfseries,text=sampleorange!75!black] at (1.42,2.63) {stratified $10\%$};
+    \node[anchor=west,font=\tiny\bfseries,text=sampleorange!75!black] at (3.18,2.63) {daily BO};
+    \node[anchor=west,font=\tiny\bfseries,text=configviolet!72!black] at (4.60,2.63) {day-specific config};
+    \node[anchor=west,font=\tiny\bfseries,text=scoregreen!62!black] at (7.10,2.63) {full-day robustness};
+
+    \node[day] (d0) at (0.25,2.14) {$D_0$};
+    \node[sample] (sample0) at (1.82,2.14) {$10\%$ sample};
+    \node[bo] (bo0) at (3.42,2.14) {BO};
+    \node[theta] (theta0) at (5.30,2.14) {$\theta^{\star}_{\mathrm{sample},0}$};
+    \node[result] (score0) at (8.60,2.14) {$p_{\mathrm{robust}}(D_0,\theta^{\star}_{\mathrm{sample},0})$};
+
+    \node[day] (d1) at (0.25,1.54) {$D_1$};
+    \node[sample] (sample1) at (1.82,1.54) {$10\%$ sample};
+    \node[bo] (bo1) at (3.42,1.54) {BO};
+    \node[theta] (theta1) at (5.30,1.54) {$\theta^{\star}_{\mathrm{sample},1}$};
+    \node[result] (score1) at (8.60,1.54) {$p_{\mathrm{robust}}(D_1,\theta^{\star}_{\mathrm{sample},1})$};
+
+    \node[day] (ddots) at (0.25,0.94) {$\cdots$};
+    \node[sample] (sampledots) at (1.82,0.94) {$\cdots$};
+    \node[bo] (bodots) at (3.42,0.94) {$\cdots$};
+    \node[theta] (thetadots) at (5.30,0.94) {$\cdots$};
+    \node[result] (scoredots) at (8.60,0.94) {$\cdots$};
+
+    \node[day] (d13) at (0.25,0.34) {$D_{13}$};
+    \node[sample] (sample13) at (1.82,0.34) {$10\%$ sample};
+    \node[bo] (bo13) at (3.42,0.34) {BO};
+    \node[theta] (theta13) at (5.30,0.34) {$\theta^{\star}_{\mathrm{sample},13}$};
+    \node[result] (score13) at (8.60,0.34) {$p_{\mathrm{robust}}(D_{13},\theta^{\star}_{\mathrm{sample},13})$};
+
+    \foreach \d/\s/\b/\t/\r in {d0/sample0/bo0/theta0/score0,d1/sample1/bo1/theta1/score1,ddots/sampledots/bodots/thetadots/scoredots,d13/sample13/bo13/theta13/score13}{
+        \draw[arrow] (\d.east) -- (\s.west);
+        \draw[arrow] (\s.east) -- (\b.west);
+        \draw[arrow] (\b.east) -- (\t.west);
+        \draw[arrow] (\t.east) -- (\r.west);
+    }
+
+    \node[anchor=west,font=\tiny,text=black!58] at (1.10,-0.18) {preserve label proportions while reducing the daily BO budget};
+\end{tikzpicture}%
+}

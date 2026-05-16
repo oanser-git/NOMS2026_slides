@@ -1,6 +1,4 @@
-\section{Introduction}
-
-\begin{frame}{ML-based NIDS Workflow: Train $\rightarrow$ Validate $\rightarrow$ Test $\rightarrow$ Deploy}
+\begin{frame}{ML-based AD IDS Workflow: Train $\rightarrow$ Validate $\rightarrow$ Test $\rightarrow$ Deploy}
     \small
     \begin{columns}[T,onlytextwidth]
 
@@ -12,8 +10,8 @@
                   \textbf{\(\mathcal{D}_{\text{train}}\)}.
 
             \item<2-> A separate validation split
-                  \textbf{\(\mathcal{D}_{\text{val}}\)} to refine the model
-                  hyperparameters.
+                  \textbf{\(\mathcal{D}_{\text{val}}\)} to choose the model
+                  hyperparameters \(\theta\).
 
             \item<3-> A final test set, \textbf{\(\mathcal{D}_{\text{test}}\)},
                   measures performance on unseen data.
@@ -21,20 +19,21 @@
             \item<4-> The selected model is deployed to monitor live traffic.
         \end{itemize}
 
-        \only<2>{%
-            \vspace{-7em}
-            \setbeamercolor{focusbox}{use={structure,normal text},
-                fg=structure.fg,
-                bg=structure.fg!12!normal text.bg}
-            \begin{beamercolorbox}[wd=\linewidth,sep=1ex,rounded=true]{focusbox}
-                \small
-                \textbf{Hyperparameters:} settings chosen before training that
-                influence model behavior.\\
-                \textbf{Example}: In RF, too few trees can give unstable
-                predictions, while too many can increase computation and overfit
-                the training data.
-            \end{beamercolorbox}
-        }
+        % \only<2>{%
+        %     \vspace{-7em}
+        %     \setbeamercolor{focusbox}{use={structure,normal text},
+        %         fg=structure.fg,
+        %         bg=structure.fg!12!normal text.bg}
+        %     \begin{beamercolorbox}[wd=\linewidth,sep=1ex,rounded=true]{focusbox}
+        %         \small
+        %         \textbf{Hyperparameters:}
+        %         Pre-training settings that control model behavior.
+
+        %         \textbf{IF Example}:\\
+        %         - Too few trees can make anomaly scores unstable.\\
+        %         - Poor subsampling can miss rare attack structure.
+        %     \end{beamercolorbox}
+        % }
 
         \column{0.42\linewidth}
         \begin{figure}
@@ -50,23 +49,23 @@
                     };
                     \begin{scope}[x={(img.south east)},y={(img.north west)}]
                         \draw[structure.fg!85!black,draw opacity=0.16,line width=5pt,line join=round]
-                            (0.43,0.35)
-                            .. controls (0.38,0.43) and (0.40,0.58) .. (0.49,0.67)
-                            .. controls (0.59,0.76) and (0.76,0.69) .. (0.78,0.56)
-                            .. controls (0.80,0.43) and (0.70,0.33) .. (0.58,0.32)
-                            .. controls (0.51,0.31) and (0.46,0.31) .. cycle;
+                        (0.43,0.35)
+                        .. controls (0.38,0.43) and (0.40,0.58) .. (0.49,0.67)
+                        .. controls (0.59,0.76) and (0.76,0.69) .. (0.78,0.56)
+                        .. controls (0.80,0.43) and (0.70,0.33) .. (0.58,0.32)
+                        .. controls (0.51,0.31) and (0.46,0.31) .. cycle;
                         \path[fill=structure.fg!45,fill opacity=0.08]
-                            (0.43,0.35)
-                            .. controls (0.38,0.43) and (0.40,0.58) .. (0.49,0.67)
-                            .. controls (0.59,0.76) and (0.76,0.69) .. (0.78,0.56)
-                            .. controls (0.80,0.43) and (0.70,0.33) .. (0.58,0.32)
-                            .. controls (0.51,0.31) and (0.46,0.31) .. cycle;
+                        (0.43,0.35)
+                        .. controls (0.38,0.43) and (0.40,0.58) .. (0.49,0.67)
+                        .. controls (0.59,0.76) and (0.76,0.69) .. (0.78,0.56)
+                        .. controls (0.80,0.43) and (0.70,0.33) .. (0.58,0.32)
+                        .. controls (0.51,0.31) and (0.46,0.31) .. cycle;
                         \draw[structure.fg!85!black,draw opacity=0.70,line width=0.9pt,line join=round]
-                            (0.43,0.35)
-                            .. controls (0.38,0.43) and (0.40,0.58) .. (0.49,0.67)
-                            .. controls (0.59,0.76) and (0.76,0.69) .. (0.78,0.56)
-                            .. controls (0.80,0.43) and (0.70,0.33) .. (0.58,0.32)
-                            .. controls (0.51,0.31) and (0.46,0.31) .. cycle;
+                        (0.43,0.35)
+                        .. controls (0.38,0.43) and (0.40,0.58) .. (0.49,0.67)
+                        .. controls (0.59,0.76) and (0.76,0.69) .. (0.78,0.56)
+                        .. controls (0.80,0.43) and (0.70,0.33) .. (0.58,0.32)
+                        .. controls (0.51,0.31) and (0.46,0.31) .. cycle;
                     \end{scope}
                 \end{tikzpicture}%
             }
@@ -78,8 +77,214 @@
     \only<5>{%
         \begin{tikzpicture}[remember picture,overlay]
             \node[anchor=south,text=structure.fg,font=\small]
-                at ([yshift=0.42cm]current page.south)
-                {\(\Longrightarrow\) This work focuses on the \textbf{configuration step} and its impact on \textbf{NIDS performance}.};
+            at ([yshift=0.78cm]current page.south)
+            {\(\Longrightarrow\)
+                Focus on the impact of the \textbf{configuration of hyperparameters (HPs)} on \textbf{AD IDS performance}.};
         \end{tikzpicture}%
     }
+\end{frame}
+
+\begin{frame}[t]{Related Work and Gap}
+    \vspace{-0.25em}
+    \begin{columns}[T,onlytextwidth]
+        \column{0.49\linewidth}
+        \scriptsize
+        {\color{structure.fg}\textbf{Broader Machine Learning}}
+        \begin{itemize}
+            \setlength\itemsep{0.42em}
+            \item \textbf{Hutter'14 / van Rijn'18}\textsuperscript{1,2}\textbf{:}
+                  a few HPs explain most performance variation.
+            \item \textbf{DOMAINBED / WILDS / HYPERTIME}\textsuperscript{3--5}\textbf{:}
+                  HPs optimized on one data distribution may fail after the distribution changes.
+        \end{itemize}
+
+        \vspace{0.85em}
+        {\color{structure.fg}\textbf{Security / IDS}}
+        \begin{itemize}
+            \setlength\itemsep{0.42em}
+            \item \textbf{Arp'22 / Pendlebury'19 / Masum'21}\textsuperscript{6--8}\textbf{:}
+                  IDS results depend strongly on tuning and validation.
+            \item \textbf{Bilot'25}\textsuperscript{9}\textbf{:}
+                  8 provenance-graph IDSs; tuned vs. untuned changes the conclusion.
+            \item Static analyses of configuration impact.
+        \end{itemize}
+
+        \column{0.48\linewidth}
+        \centering
+        \includegraphics[width=0.92\linewidth]{figures/introduction/bilot_hpo_importance}
+        \figsource{Bilot et al., USENIX Security 2025}
+    \end{columns}
+
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[
+        anchor=south,
+        align=center,
+        text width=0.92\paperwidth,
+        text=structure.fg,
+        font=\small
+        ] at ([yshift=0.96cm]current page.south) {%
+        \(\Longrightarrow\) \textbf{Gap:} no direct quantification for AD IDS under network context changes.\\[-0.1em]
+        {\scriptsize (i.e., traffic volume, composition, topology, and attack types)}%
+        };
+        \node[
+        anchor=south west,
+        align=left,
+        text width=0.86\paperwidth,
+        text=black!62,
+        font=\fontsize{2.8}{3.1}\selectfont
+        ] at ([xshift=0.22cm,yshift=0.00cm]current page.south west) {%
+        [1] Hutter et al., ``An Efficient Approach for Assessing Hyperparameter Importance'', ICML 2014; [2] van Rijn and Hutter, ``Hyperparameter Importance Across Datasets'', KDD 2018.\\[-0.05em]
+        [3] Gulrajani and Lopez-Paz, ``In Search of Lost Domain Generalization'', arXiv 2020; [4] Koh et al., ``WILDS: A Benchmark of in-the-Wild Distribution Shifts'', ICML 2021.\\[-0.05em]
+        [5] Zhang et al., ``HyperTime: Hyperparameter Optimization for Combating Temporal Distribution Shifts'', ACM MM 2024; [6] Arp et al., ``Dos and Don'ts of Machine Learning in Computer Security'', USENIX Security 2022.\\[-0.05em]
+        [7] Pendlebury et al., ``TESSERACT: Eliminating Experimental Bias in Malware Classification across Space and Time'', USENIX Security 2019; [8] Masum et al., ``Bayesian Hyperparameter Optimization for Deep Neural Network-Based Network Intrusion Detection'', IEEE BigData 2021.\\[-0.05em]
+        [9] Bilot et al., ``Sometimes Simpler is Better: A Comprehensive Analysis of State-of-the-Art Provenance-Based Intrusion Detection Systems'', USENIX Security 2025.%
+        };
+    \end{tikzpicture}%
+\end{frame}
+
+\begin{frame}{Operational Setting and Research Questions}
+    \small
+    {\color{structure.fg}\textbf{Operational setting}}
+    \vspace{0.2em}
+    \begin{itemize}
+        \setlength\itemsep{0.6em}
+        \item Configuring \(\theta\) can be costly; in practice, it is often fixed once.
+        \item But the network context changes over time: traffic volume, composition, topology, and attack types evolve.
+    \end{itemize}
+
+    \vspace{0.55em}
+    {\color{structure.fg}\textbf{Research questions}}
+    \vspace{0.2em}
+    \begin{itemize}
+        \setlength\itemsep{0.6em}
+        \item Can cheaper strategies approach an oracle-optimized reference without full reconfiguration?
+        \item If \(\theta\) is reused, how much performance is lost compared with reconfiguring for the current network context?
+    \end{itemize}
+
+    \vfill
+    \centering
+    {\color{structure.fg}\small
+        \(\Longrightarrow\) Measure the performance penalty of avoiding full reconfiguration in AD IDS under changing network contexts.}
+\end{frame}
+
+\begin{frame}[t]{Experimental Setup: Benchmark Context}
+    \scriptsize
+    \begin{columns}[T,onlytextwidth]
+        \column{0.31\linewidth}
+        \setlength{\leftmargini}{1.0em}
+        \begin{itemize}
+            \setlength\itemsep{0.55em}
+            \item<1-> Corrected IDS2017\textsuperscript{1} / IDS2018\textsuperscript{2} provide day-level traffic datasets \(D_0, \ldots, D_{13}\).
+            \item<2-> Flow volume varies; benign traffic is above 95\% on 8/14 days, and varies on the others.
+            \item<3-> Attack types also vary by day.
+        \end{itemize}
+
+        \column{0.66\linewidth}
+        \centering
+        \input{figures/study_design/benchmark_context_visual}
+    \end{columns}
+
+    \vfill
+    \centering
+    \visible<4->{\color{structure.fg}\small
+        \(\Longrightarrow\) Each day is considered as a specific network context; moving from one day to another simulates a context change.}
+
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[
+            anchor=south west,
+            align=left,
+            text width=0.86\paperwidth,
+            text=black!62,
+            font=\fontsize{3.5}{3.9}\selectfont
+        ] at ([xshift=0.22cm,yshift=0.10cm]current page.south west) {%
+            \textsuperscript{1} Sharafaldin et al., ``Toward Generating a New Intrusion Detection Dataset and Intrusion Traffic Characterization'', ICISSP 2018.\\[-0.05em]
+            \textsuperscript{2} CSE-CIC-IDS2018 on AWS, CSE and CIC, 2018; official dataset page recommends citing Sharafaldin et al., ICISSP 2018.%
+        };
+    \end{tikzpicture}%
+
+\end{frame}
+
+\begin{frame}{Experimental Setup: IF, BO, and Robustness Metric}
+    \scriptsize
+    \centering
+    \input{figures/study_design/if_bo_metric_visual}
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[anchor=south,text=structure.fg,font=\scriptsize,align=center]
+        at ([yshift=0.34cm]current page.south) {\only<1>{\(\Longrightarrow\) Isolation Forest (IF): train on benign flows, score benign + attack flows.\\[-0.05em]
+                {\color{black!65}Lightweight enough for many configuration runs.}}%
+            \only<2>{\(\Longrightarrow\) ROC--AUC: try all alert thresholds; area under the curve = \(p_{\text{robust}}\).\\[-0.05em]
+                {\color{black!65}Higher means better attack/benign separation.}}%
+            \only<3>{\(\Longrightarrow\) \(\theta\) groups seven IF hyperparameters by their operational effect.}%
+            \only<4->{\(\Longrightarrow\) BO gives the oracle reference: \(\theta_i^{\star}=BO(D_i)\).}};
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[plain]
+    \centering
+    \vfill
+    {\color{structure.fg}\Large\bfseries Research Question 1}
+
+    \vspace{1.2em}
+    \begin{minipage}{0.88\linewidth}
+        \centering
+        {\LARGE\bfseries
+        Can cheaper strategies approach\\[0.25em]
+        an oracle-optimized reference\\[0.25em]
+        without full reconfiguration?}
+    \end{minipage}
+    \vfill
+\end{frame}
+
+\begin{frame}{Experimental Setup: Alternative 1 -- Default}
+    \scriptsize
+
+    \vspace{1.4em}
+    \input{figures/study_design/reuse_default_visual}
+
+    \vfill
+    \centering
+    {\color{structure.fg}\small
+        \(\Longrightarrow\) Zero tuning cost; tests whether the library default is robust enough across changing network contexts.}
+\end{frame}
+
+\begin{frame}{Experimental Setup: Alternative 2 -- Single Overall}
+    \scriptsize
+
+    \vspace{1.4em}
+    \input{figures/study_design/reuse_overall_visual}
+
+    \vfill
+    \centering
+    {\color{structure.fg}\small
+        \(\Longrightarrow\) Optimize once on heterogeneous historical traffic; amortize BO effort into one reusable configuration.}
+\end{frame}
+
+\begin{frame}{Experimental Setup: Alternative 3 -- 10\% Sample BO}
+    \scriptsize
+
+    \vspace{1.4em}
+    \input{figures/study_design/reuse_sample_visual}
+
+    \vfill
+    \centering
+    {\color{structure.fg}\small
+        \(\Longrightarrow\) Keep day-specific adaptation, but make BO cheaper by tuning on a stratified 10\% subset.}
+\end{frame}
+
+\begin{frame}{Experimental Setup: Nested Cross-Validation}
+    \scriptsize
+    \centering
+    \input{figures/study_design/nested_cv_protocol_visual}
+
+    \vspace{0.6em}
+    \centering
+    \begin{minipage}[c][1.15cm][c]{0.92\linewidth}
+        \centering
+        {\color{structure.fg}\small
+            \only<1>{\(\Longrightarrow\) Why nested? Choose \(\theta\) using only training folds, avoiding test leakage.}
+            \only<2>{\(\Longrightarrow\) Configure \(\theta\): BO validates on inner benign folds + one attack training fold; reuse skips BO.}
+            \only<3>{\(\Longrightarrow\) Evaluation: IF trains on benign folds, tests on held-out folds, and gives one \(p_{\text{robust}}\).}
+            \only<4>{\(\Longrightarrow\) Repeat the outer loop over the five folds before averaging.}
+            \only<5->{\(\Longrightarrow\) The reported score is mean \(p_{\text{robust}}\).}}
+    \end{minipage}
 \end{frame}

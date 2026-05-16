@@ -1,0 +1,58 @@
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[font=\sffamily\scriptsize,line width=0.55pt]
+    \definecolor{dayblue}{RGB}{42,122,188}
+    \definecolor{methodaccent}{RGB}{82,92,125}
+    \definecolor{poolgreen}{RGB}{82,92,125}
+    \definecolor{configviolet}{RGB}{82,92,125}
+    \definecolor{scoregreen}{RGB}{82,92,125}
+
+    \tikzset{
+        box/.style={rounded corners=5pt,draw=#1!38,fill=#1!9,align=center,inner xsep=7pt,inner ysep=6pt},
+        day/.style={rounded corners=2pt,draw=dayblue!45,fill=dayblue!12,minimum width=0.62cm,minimum height=0.40cm,font=\bfseries\tiny,text=dayblue!65!black},
+        arrow/.style={->,draw=black!48,line width=0.75pt},
+        fan/.style={draw=configviolet!62,line width=0.65pt},
+        resultarrow/.style={->,draw=scoregreen!62!black,line width=0.65pt},
+        result/.style={rounded corners=3pt,draw=scoregreen!38,fill=scoregreen!9,align=center,inner xsep=4pt,inner ysep=3pt,font=\tiny},
+        every node/.style={text=black!84}
+    }
+
+    \foreach \y/\lab in {1.95/$D_0$,1.42/$D_1$,0.89/$\cdots$,0.36/$D_{13}$}{
+        \node[day] at (0,\y) {\lab};
+    }
+    \node[box=poolgreen,minimum width=1.90cm,minimum height=1.18cm] (pool) at (2.10,1.15)
+        {global pool\\[-0.1em] $D=\bigcup_i D_i$};
+    \node[box=poolgreen,minimum width=1.25cm,minimum height=0.70cm] (bo) at (4.15,1.15)
+        {BO\\once};
+    \node[box=configviolet,minimum width=1.80cm,minimum height=0.82cm] (theta) at (6.20,1.15)
+        {$\theta^{\star}_{overall}$\\[-0.1em] one config};
+
+    \node[day] (eval0) at (9.05,1.95) {$D_0$};
+    \node[day] (eval1) at (9.05,1.42) {$D_1$};
+    \node[day] (evaldots) at (9.05,0.89) {$\cdots$};
+    \node[day] (eval13) at (9.05,0.36) {$D_{13}$};
+
+    \node[result,minimum width=2.75cm,minimum height=0.36cm] (score0) at (11.60,1.95)
+        {$p_{\mathrm{robust}}(D_0,\theta^{\star}_{\mathrm{overall}})$};
+    \node[result,minimum width=2.75cm,minimum height=0.36cm] (score1) at (11.60,1.42)
+        {$p_{\mathrm{robust}}(D_1,\theta^{\star}_{\mathrm{overall}})$};
+    \node[result,minimum width=2.75cm,minimum height=0.36cm] (scoredots) at (11.60,0.89)
+        {$\cdots$};
+    \node[result,minimum width=2.75cm,minimum height=0.36cm] (score13) at (11.60,0.36)
+        {$p_{\mathrm{robust}}(D_{13},\theta^{\star}_{\mathrm{overall}})$};
+
+    \foreach \y in {1.95,1.42,0.89,0.36}{
+        \draw[draw=black!48,line width=0.75pt] (0.35,\y) -- (pool.west);
+    }
+    \draw[arrow] (pool.east) -- (bo.west);
+    \draw[arrow] (bo.east) -- (theta.west);
+    \draw[draw=black!48,line width=0.75pt] (theta.east) -- (7.70,1.15);
+    \foreach \target in {eval0,eval1,evaldots,eval13}{
+        \draw[fan] (7.70,1.15) -- (\target.west);
+    }
+    \foreach \source/\target in {eval0/score0,eval1/score1,evaldots/scoredots,eval13/score13}{
+        \draw[resultarrow] (\source.east) -- (\target.west);
+    }
+
+    \node[anchor=west,font=\tiny,text=black!58] at (3.28,0.35) {optimize offline, then reuse everywhere};
+\end{tikzpicture}%
+}

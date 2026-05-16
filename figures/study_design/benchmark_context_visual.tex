@@ -1,0 +1,175 @@
+\definecolor{idsseventeen}{RGB}{215,80,80}
+\definecolor{idseighteen}{RGB}{74,144,210}
+\definecolor{benignblue}{RGB}{30,105,175}
+\definecolor{dosgreen}{RGB}{92,170,91}
+\definecolor{scanorange}{RGB}{235,145,55}
+\definecolor{webpurple}{RGB}{140,105,180}
+\definecolor{othergray}{RGB}{165,170,175}
+\definecolor{attackftp}{RGB}{238,128,41}
+\definecolor{attackssh}{RGB}{207,67,57}
+\definecolor{attackhulk}{RGB}{77,165,82}
+\definecolor{attackge}{RGB}{96,194,160}
+\definecolor{attackslor}{RGB}{154,189,65}
+\definecolor{attackshttp}{RGB}{94,176,209}
+\definecolor{attacknmap}{RGB}{133,91,175}
+\definecolor{attackloic}{RGB}{213,78,136}
+\definecolor{attackhoic}{RGB}{232,96,76}
+\definecolor{attackbf}{RGB}{160,112,72}
+\definecolor{attackxss}{RGB}{224,122,182}
+\definecolor{attacksql}{RGB}{126,92,210}
+\definecolor{attackinfil}{RGB}{47,150,190}
+\definecolor{attackbot}{RGB}{80,120,215}
+\definecolor{attackatt}{RGB}{85,90,95}
+
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1.06cm,font=\sffamily\scriptsize,line width=0.45pt]
+    \newcommand{\daylabel}[3]{%
+        \draw[rounded corners=1.5pt,fill=#3!10,draw=#3!85,line width=0.6pt]
+            (#2,3.46) rectangle ++(0.46,0.34);
+        \node[font=\tiny] at (#2+0.23,3.63) {D#1};
+    }
+    \newcommand{\flowbar}[2]{%
+        \draw[rounded corners=0.5pt,fill=black!3,draw=black!13,line width=0.20pt]
+            (#1+0.13,2.83) rectangle ++(0.20,0.46);
+        \pgfmathsetmacro{\flowheight}{max(0.035,#2*0.46)}
+        \draw[rounded corners=0.5pt,fill=black!45,draw=black!58,line width=0.25pt]
+            (#1+0.13,2.83) rectangle ++(0.20,\flowheight);
+    }
+    \newcommand{\benignbar}[2]{%
+        \draw[rounded corners=1pt,fill=benignblue!8,draw=black!14]
+            (#1+0.08,2.20) rectangle ++(0.30,0.50);
+        \pgfmathsetmacro{\benignheight}{#2/100*0.50}
+        \draw[rounded corners=1pt,fill=benignblue!85,draw=none]
+            (#1+0.08,2.20) rectangle ++(0.30,\benignheight);
+        \node[font=\fontsize{3.7}{4}\selectfont,text=black!72] at (#1+0.23,2.03) {#2};
+    }
+    \newcommand{\attackmark}[2]{%
+        \draw[fill=#2,draw=white,line width=0.28pt] (#1,1.55) circle (0.068);
+    }
+    \newcommand{\unsuccessmark}[1]{%
+        \draw[fill=attackatt,draw=white,line width=0.28pt] (#1,1.38) circle (0.060);
+    }
+    \newcommand{\legendentry}[4]{%
+        \draw[fill=#3,draw=white,line width=0.25pt] (#1,#2) circle (0.055);
+        \node[anchor=west,font=\fontsize{4.55}{5.0}\selectfont,text=black!72]
+            at (#1+0.10,#2) {#4};
+    }
+
+    \draw[rounded corners=5pt,fill=black!2,draw=black!9] (-0.15,1.25) rectangle (9.85,4.96);
+
+    \visible<3->{%
+        \draw[rounded corners=2pt,fill=white,draw=black!10] (0.35,3.96) rectangle (9.55,4.80);
+        \legendentry{0.58}{4.66}{attackftp}{FTP brute force}
+        \legendentry{2.78}{4.66}{attackssh}{SSH brute force}
+        \legendentry{5.03}{4.66}{attackhulk}{DoS Hulk}
+        \legendentry{7.00}{4.66}{attackge}{DoS GoldenEye}
+        \legendentry{0.58}{4.47}{attackslor}{DoS Slowloris}
+        \legendentry{2.78}{4.47}{attackshttp}{DoS SlowHTTP}
+        \legendentry{5.03}{4.47}{attacknmap}{NMAP scan}
+        \legendentry{7.00}{4.47}{attackloic}{LOIC HTTP}
+        \legendentry{0.58}{4.28}{attackhoic}{HOIC HTTP}
+        \legendentry{2.78}{4.28}{attackbf}{Web brute force}
+        \legendentry{5.03}{4.28}{attackxss}{Web XSS}
+        \legendentry{7.00}{4.28}{attacksql}{Web SQLi}
+        \legendentry{0.58}{4.09}{attackinfil}{Infiltration}
+        \legendentry{2.78}{4.09}{attackbot}{Botnet Ares}
+        \legendentry{5.03}{4.09}{attackatt}{Unsuccessful attempts}
+    }
+
+    \visible<1->{%
+        \node[anchor=east,font=\tiny,text=black!70] at (1.18,3.63) {Day};
+        \daylabel{0}{1.45}{idsseventeen}
+        \daylabel{1}{1.99}{idsseventeen}
+        \daylabel{2}{2.53}{idsseventeen}
+        \daylabel{3}{3.07}{idsseventeen}
+        \daylabel{4}{3.78}{idseighteen}
+        \daylabel{5}{4.38}{idseighteen}
+        \daylabel{6}{4.98}{idseighteen}
+        \daylabel{7}{5.58}{idseighteen}
+        \daylabel{8}{6.18}{idseighteen}
+        \daylabel{9}{6.78}{idseighteen}
+        \daylabel{10}{7.38}{idseighteen}
+        \daylabel{11}{7.98}{idseighteen}
+        \daylabel{12}{8.58}{idseighteen}
+        \daylabel{13}{9.18}{idseighteen}
+    }
+
+    \visible<2->{%
+        \node[anchor=east,font=\tiny,text=black!70] at (1.18,3.08) {\#Flows};
+        \node[anchor=east,font=\tiny,text=black!70] at (1.18,2.45) {Benign\%};
+        \flowbar{1.45}{0.04}
+        \flowbar{1.99}{0.07}
+        \flowbar{2.53}{0.05}
+        \flowbar{3.07}{0.07}
+        \flowbar{3.78}{0.80}
+        \flowbar{4.38}{0.73}
+        \flowbar{4.98}{1.00}
+        \flowbar{5.58}{0.82}
+        \flowbar{6.18}{0.93}
+        \flowbar{6.78}{0.82}
+        \flowbar{7.38}{0.81}
+        \flowbar{7.98}{0.89}
+        \flowbar{8.58}{0.89}
+        \flowbar{9.18}{0.85}
+        \node[anchor=south,font=\fontsize{3.7}{4}\selectfont,text=black!55] at (5.21,3.21) {730k};
+
+        \benignbar{1.45}{97.8}
+        \benignbar{1.99}{64.3}
+        \benignbar{2.53}{80.9}
+        \benignbar{3.07}{52.7}
+        \benignbar{3.78}{95.1}
+        \benignbar{4.38}{99.3}
+        \benignbar{4.98}{74.2}
+        \benignbar{5.58}{95.2}
+        \benignbar{6.18}{84.4}
+        \benignbar{6.78}{99.9}
+        \benignbar{7.38}{99.9}
+        \benignbar{7.98}{99.2}
+        \benignbar{8.58}{99.4}
+        \benignbar{9.18}{97.7}
+    }
+
+    \visible<3->{%
+        \node[anchor=east,font=\tiny,text=black!70] at (1.18,1.55) {Attacks};
+        \attackmark{1.59}{attackftp}
+        \attackmark{1.73}{attackssh}
+        \attackmark{2.04}{attackhulk}
+        \attackmark{2.16}{attackge}
+        \attackmark{2.28}{attackslor}
+        \attackmark{2.40}{attackshttp}
+        \attackmark{2.76}{attacknmap}
+        \attackmark{3.23}{attacknmap}
+        \attackmark{3.37}{attackloic}
+        \attackmark{4.08}{attackssh}
+        \attackmark{4.52}{attackge}
+        \attackmark{4.66}{attackslor}
+        \attackmark{5.14}{attackhulk}
+        \attackmark{5.81}{attackloic}
+        \attackmark{6.41}{attackhoic}
+        \attackmark{6.85}{attackbf}
+        \attackmark{7.01}{attackxss}
+        \attackmark{7.17}{attacksql}
+        \attackmark{7.45}{attackbf}
+        \attackmark{7.61}{attackxss}
+        \attackmark{7.77}{attacksql}
+        \attackmark{8.21}{attackinfil}
+        \attackmark{8.81}{attackinfil}
+        \attackmark{9.41}{attackbot}
+
+        \unsuccessmark{1.68}
+        \unsuccessmark{2.22}
+        \unsuccessmark{2.76}
+        \unsuccessmark{3.30}
+        \unsuccessmark{4.01}
+        \unsuccessmark{4.61}
+        \unsuccessmark{5.21}
+        \unsuccessmark{5.81}
+        \unsuccessmark{6.41}
+        \unsuccessmark{7.01}
+        \unsuccessmark{7.61}
+        \unsuccessmark{8.21}
+        \unsuccessmark{8.81}
+        \unsuccessmark{9.41}
+    }
+\end{tikzpicture}%
+}
