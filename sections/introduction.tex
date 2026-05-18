@@ -117,14 +117,14 @@
 
     \begin{tikzpicture}[remember picture,overlay]
         \node[
-        anchor=south,
-        align=center,
-        text width=0.92\paperwidth,
-        text=structure.fg,
-        font=\small
+            anchor=south,
+            align=center,
+            text width=0.92\paperwidth,
+            text=structure.fg,
+            font=\small
         ] at ([yshift=0.96cm]current page.south) {%
-        \(\Longrightarrow\) \textbf{Gap:} no direct quantification for AD IDS under network context changes.\\[-0.1em]
-        {\scriptsize (i.e., traffic volume, composition, topology, and attack types)}%
+            \(\Longrightarrow\) \textbf{Gap:} no direct quantification for AD IDS under network context changes.\\[-0.1em]
+            % {\scriptsize (i.e., traffic volume, composition, topology, and attack types)}%
         };
         \node[
         anchor=south west,
@@ -148,23 +148,18 @@
     \vspace{0.2em}
     \begin{itemize}
         \setlength\itemsep{0.6em}
-        \item Configuring \(\theta\) can be costly; in practice, it is often fixed once.
-        \item But the network context changes over time: traffic volume, composition, topology, and attack types evolve.
+        \item Configuring \(\theta\) can be costly \(\rightarrow\) often fixed once.
+        \item Network context changes over time: traffic volume, composition, topology, and attack types evolve.
     \end{itemize}
 
     \vspace{0.55em}
     {\color{structure.fg}\textbf{Research questions}}
     \vspace{0.2em}
-    \begin{itemize}
+    \begin{enumerate}
         \setlength\itemsep{0.6em}
-        \item Can cheaper strategies approach an oracle-optimized reference without full reconfiguration?
         \item If \(\theta\) is reused, how much performance is lost compared with reconfiguring for the current network context?
-    \end{itemize}
-
-    \vfill
-    \centering
-    {\color{structure.fg}\small
-        \(\Longrightarrow\) Measure the performance penalty of avoiding full reconfiguration in AD IDS under changing network contexts.}
+        \item Can simple low-budget strategies approach the performance of full reconfiguration?
+    \end{enumerate}
 \end{frame}
 
 \begin{frame}[t]{Experimental Setup: Benchmark Context}
@@ -187,7 +182,7 @@
     \vfill
     \centering
     \visible<4->{\color{structure.fg}\small
-        \(\Longrightarrow\) Each day is considered as a specific network context; moving from one day to another simulates a context change.}
+        \(\Longrightarrow\) Each day defines a distinct dataset and network context; moving across days represents a network context change.}
 
     \begin{tikzpicture}[remember picture,overlay]
         \node[
@@ -211,80 +206,28 @@
     \begin{tikzpicture}[remember picture,overlay]
         \node[anchor=south,text=structure.fg,font=\scriptsize,align=center]
         at ([yshift=0.34cm]current page.south) {\only<1>{\(\Longrightarrow\) Isolation Forest (IF): train on benign flows, score benign + attack flows.\\[-0.05em]
-                {\color{black!65}Lightweight enough for many configuration runs.}}%
-            \only<2>{\(\Longrightarrow\) ROC--AUC: try all alert thresholds; area under the curve = \(p_{\text{robust}}\).\\[-0.05em]
-                {\color{black!65}Higher means better attack/benign separation.}}%
-            \only<3>{\(\Longrightarrow\) \(\theta\) groups seven IF hyperparameters by their operational effect.}%
-            \only<4->{\(\Longrightarrow\) BO gives the oracle reference: \(\theta_i^{\star}=BO(D_i)\).}};
+        {\color{black!65}Lightweight enough for many configuration runs.}}%
+        \only<2>{\(\Longrightarrow\) ROC--AUC: try all alert thresholds; area under the curve = \(p_{\text{robust}}\).\\[-0.05em]
+        {\color{black!65}Higher means better attack/benign separation.}}%
+        \only<3>{\(\Longrightarrow\) \(\theta\) groups seven IF hyperparameters by their operational effect.}%
+        \only<4->{\(\Longrightarrow\) Bayesian Optimization (BO) gives the oracle reference: \(\theta_i^{\star}=BO(D_i)\).}};
     \end{tikzpicture}
 \end{frame}
 
-\begin{frame}[plain]
-    \centering
-    \vfill
-    {\color{structure.fg}\Large\bfseries Research Question 1}
-
-    \vspace{1.2em}
-    \begin{minipage}{0.88\linewidth}
-        \centering
-        {\LARGE\bfseries
-        Can cheaper strategies approach\\[0.25em]
-        an oracle-optimized reference\\[0.25em]
-        without full reconfiguration?}
-    \end{minipage}
-    \vfill
-\end{frame}
-
-\begin{frame}{Experimental Setup: Alternative 1 -- Default}
-    \scriptsize
-
-    \vspace{1.4em}
-    \input{figures/study_design/reuse_default_visual}
-
-    \vfill
-    \centering
-    {\color{structure.fg}\small
-        \(\Longrightarrow\) Zero tuning cost; tests whether the library default is robust enough across changing network contexts.}
-\end{frame}
-
-\begin{frame}{Experimental Setup: Alternative 2 -- Single Overall}
-    \scriptsize
-
-    \vspace{1.4em}
-    \input{figures/study_design/reuse_overall_visual}
-
-    \vfill
-    \centering
-    {\color{structure.fg}\small
-        \(\Longrightarrow\) Optimize once on heterogeneous historical traffic; amortize BO effort into one reusable configuration.}
-\end{frame}
-
-\begin{frame}{Experimental Setup: Alternative 3 -- 10\% Sample BO}
-    \scriptsize
-
-    \vspace{1.4em}
-    \input{figures/study_design/reuse_sample_visual}
-
-    \vfill
-    \centering
-    {\color{structure.fg}\small
-        \(\Longrightarrow\) Keep day-specific adaptation, but make BO cheaper by tuning on a stratified 10\% subset.}
-\end{frame}
-
-\begin{frame}{Experimental Setup: Nested Cross-Validation}
+\begin{frame}{Experimental Setup: Data Splits and BO Search}
     \scriptsize
     \centering
-    \input{figures/study_design/nested_cv_protocol_visual}
+    \input{figures/study_design/nested_cv_setup_visual}
 
     \vspace{0.6em}
     \centering
     \begin{minipage}[c][1.15cm][c]{0.92\linewidth}
         \centering
         {\color{structure.fg}\small
-            \only<1>{\(\Longrightarrow\) Why nested? Choose \(\theta\) using only training folds, avoiding test leakage.}
-            \only<2>{\(\Longrightarrow\) Configure \(\theta\): BO validates on inner benign folds + one attack training fold; reuse skips BO.}
-            \only<3>{\(\Longrightarrow\) Evaluation: IF trains on benign folds, tests on held-out folds, and gives one \(p_{\text{robust}}\).}
-            \only<4>{\(\Longrightarrow\) Repeat the outer loop over the five folds before averaging.}
-            \only<5->{\(\Longrightarrow\) The reported score is mean \(p_{\text{robust}}\).}}
+            \only<1>{\(\Longrightarrow\) Outer folds define \(D_{\mathrm{train}}\) and \(D_{\mathrm{test}}\) without mixing test traffic into configuration.}
+            \only<2>{\(\Longrightarrow\) BO uses only training-side data: inner folds form \(D_{\mathrm{val}}\) to select \(\theta_i^{\star}\).}
+            \only<3>{\(\Longrightarrow\) Evaluation trains IF on benign training folds and tests on held-out benign + attack folds.}
+            \only<4>{\(\Longrightarrow\) The same outer construction is repeated over the five folds.}
+            \only<5->{\(\Longrightarrow\) The reported oracle reference is mean \(p_{\text{robust}}\).}}
     \end{minipage}
 \end{frame}

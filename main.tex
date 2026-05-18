@@ -40,7 +40,7 @@
 \setbeamercolor{defbox}{bg=defbg,fg=black}
 \setbeamercolor{takebox}{bg=takebg,fg=black}
 
-\newcommand{\titlelogoheight}{0.54cm}
+\newcommand{\titlelogoheight}{0.90cm}
 
 \title{An Empirical Study on Configuration Robustness of Unsupervised IDS}
 \author[Omar Anser, Jerome Francois, Isabelle Chrisment]{Omar Anser\inst{1}, Jerome Francois\inst{1,3}, Isabelle Chrisment\inst{2,3}}
@@ -50,13 +50,20 @@
 \begin{document}
 
 \begin{frame}[plain,noframenumbering]
-  \begin{flushright}
-    \includegraphics[height=\titlelogoheight]{figures/logo/Inr_logo_fr_rouge.png}\hspace{0.45em}%
-    \includegraphics[height=\titlelogoheight]{figures/logo/Logo_loria_abrege_couleur.png}\hspace{0.45em}%
+  \begin{columns}[T,onlytextwidth]
+    \column{0.49\linewidth}
+    \raggedright
+    \includegraphics[height=\titlelogoheight,trim=165 160 165
+      185,clip]{figures/logo/logo-snt-square.png}\hspace{2em}%
     \includegraphics[height=\titlelogoheight]{figures/logo/Logo-universite-de-lorraine.png}
-  \end{flushright}
 
-  \vspace{-0.35em}
+    \column{0.49\linewidth}
+    \raggedleft
+    \includegraphics[height=\titlelogoheight]{figures/logo/Logo_loria_abrege_couleur.png}\hspace{2em}%
+    \includegraphics[height=\titlelogoheight]{figures/logo/Inr_logo_fr_rouge.png}
+  \end{columns}
+
+  \vspace{1em}
   \centering
   {\usebeamerfont{title}\usebeamercolor[fg]{title}\Large\bfseries\inserttitle\par}
 
@@ -77,5 +84,8 @@
 \begin{frame}[standout]
   Questions?
 \end{frame}
+
+\appendix
+\input{sections/backup}
 
 \end{document}

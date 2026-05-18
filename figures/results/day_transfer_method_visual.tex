@@ -47,7 +47,7 @@
                 \fi
             }
         }
-        \node[font=\bfseries\scriptsize,text=configviolet!70!black] at ({\mx+7*\s},6.10) {all source days \(D_j\)};
+        \node[font=\bfseries\scriptsize,text=configviolet!70!black] at ({\mx+7*\s},6.10) {all source days};
         \pgfmathsetmacro{\xellipsis}{\mx+6*\s+0.5*\s}
         \node[font=\scriptsize,text=configviolet!70!black] at (\xellipsis,5.82) {$\cdots$};
     }
@@ -59,8 +59,8 @@
             \draw[draw=configviolet!42,fill=configviolet!10,line width=0.34pt] (\xsource,\y) rectangle ++(\s,-\s);
         }
         \node[draw=configviolet!55,fill=configviolet!10,rounded corners=3pt,inner xsep=5pt,inner ysep=3pt,font=\bfseries\scriptsize,text=configviolet!70!black]
-            (sourcecfg) at (\xcenter,5.88) {$\theta_j^{\star}$};
-        \node[font=\tiny,text=configviolet!65!black] at (\xcenter,6.34) {$D_j$};
+            (sourcecfg) at (\xcenter,5.88) {$\theta_9^{\star}$};
+        \node[font=\tiny,text=configviolet!65!black] at (\xcenter,6.34) {$D_9$};
         \draw[arrow=configviolet] (sourcecfg.south) -- (\xcenter,{\my+0.05});
     }
 
@@ -95,7 +95,6 @@
         }
         \node[draw=riskorange!58,fill=riskorange!12,rounded corners=3pt,inner xsep=5pt,inner ysep=3pt,font=\bfseries\scriptsize,text=riskorange!78!black]
             (rowdist) at (0.38,\ycenter) {$R_0$};
-        \draw[arrow=riskorange] (rowdist.east) -- ({\mx+\s-0.06},\ycenter);
 
         \draw[draw=riskorange!72!black,line width=1.1pt]
             ({\mx+\s-0.02},{\ytop-\s-0.09}) -- ({\mx+14*\s+0.02},{\ytop-\s-0.09});
@@ -133,8 +132,6 @@
         \node[font=\scriptsize,text=black!58] at (0.90,\y) {\lab};
     }
 
-    \node[font=\bfseries\scriptsize,text=black!66]
-        at ({\mx+7*\s},0.23) {source configuration $\theta_j^{\star}$ from $D_j$};
     \node[font=\bfseries\scriptsize,text=black!66,rotate=90]
         at (0.28,{\my-7*\s}) {target day $D_i$};
 \end{tikzpicture}%

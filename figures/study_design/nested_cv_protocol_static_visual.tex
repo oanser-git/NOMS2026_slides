@@ -1,0 +1,113 @@
+\resizebox{0.98\linewidth}{!}{%
+\begin{tikzpicture}[font=\sffamily\scriptsize,line width=0.5pt]
+    \definecolor{benignfold}{RGB}{42,122,188}
+    \definecolor{attackfold}{RGB}{215,90,75}
+    \definecolor{methodaccent}{RGB}{82,92,125}
+    \definecolor{oraclefold}{RGB}{82,92,125}
+    \definecolor{reusefold}{RGB}{82,92,125}
+    \definecolor{evalfold}{RGB}{82,92,125}
+    \definecolor{defaultgray}{RGB}{112,112,112}
+
+    \tikzset{
+        stage/.style={rounded corners=6pt,draw=black!12,fill=black!2},
+        route/.style={rounded corners=5pt,draw=#1!35,fill=#1!8},
+        badge/.style={circle,draw=#1!45,fill=#1!12,minimum size=0.56cm,inner sep=0pt,font=\bfseries},
+        fold/.style={rounded corners=1pt,draw=white,line width=0.35pt,minimum width=0.33cm,minimum height=0.36cm,inner sep=0pt},
+        arrow/.style={->,draw=black!48,line width=0.72pt},
+        coloredarrow/.style={->,draw=#1!70,line width=0.72pt},
+        micro/.style={font=\tiny,text=black!64},
+        every node/.style={text=black!84}
+    }
+
+    \draw[stage] (0,0) rectangle (3.05,3.75);
+    \draw[stage] (3.55,0) rectangle (6.90,3.75);
+    \draw[stage] (7.40,0) rectangle (12.35,3.75);
+
+    \node[anchor=west,font=\bfseries,text=structure.fg] at (0.25,3.42) {1. Split $\times 5$};
+    \node[anchor=east] at (0.95,2.62) {benign};
+    \foreach \i in {0,1,2,3}{
+        \node[fold,fill=benignfold!78] at ({1.22+0.39*\i},2.62) {};
+    }
+    \node[fold,fill=benignfold!15,draw=benignfold!58] at (2.78,2.62) {};
+    \node[micro,align=center] at (1.78,2.12) {$4$ train\\folds};
+    \node[micro,align=center] at (2.78,2.12) {$1$ test\\fold};
+
+    \node[anchor=east] at (0.95,1.32) {attack};
+    \node[fold,fill=attackfold!78] at (1.22,1.32) {};
+    \foreach \i in {1,2,3,4}{
+        \node[fold,fill=attackfold!15,draw=attackfold!58] at ({1.22+0.39*\i},1.32) {};
+    }
+    \node[micro,align=center] at (1.22,0.82) {$1$ train\\fold};
+    \node[micro,align=center] at (2.19,0.82) {$4$ test\\folds};
+
+    \node[anchor=west,font=\bfseries,text=structure.fg] at (3.80,3.42) {2. Configure $\theta$};
+    \draw[arrow] (3.05,1.88) -- (3.55,1.88);
+
+    \draw[route=oraclefold] (3.86,1.90) rectangle (6.58,3.08);
+    \node[badge=oraclefold,text=oraclefold!70!black] at (4.23,2.48) {BO};
+    \draw[rounded corners=3pt,draw=oraclefold!48,dashed,fill=oraclefold!5] (4.70,2.18) rectangle (6.28,2.88);
+    \node[anchor=west,font=\tiny\bfseries,text=oraclefold!75!black] at (4.82,2.72) {inner CV $\times4$};
+    \foreach \i in {0,1,2}{
+        \node[fold,fill=benignfold!72,minimum width=0.22cm,minimum height=0.22cm] at ({4.88+0.26*\i},2.42) {};
+    }
+    \node[fold,fill=benignfold!14,draw=benignfold!56,minimum width=0.22cm,minimum height=0.22cm] at (5.66,2.42) {};
+    \node[font=\tiny,text=black!55] at (5.88,2.42) {+};
+    \node[fold,fill=attackfold!72,minimum width=0.22cm,minimum height=0.22cm] at (6.10,2.42) {};
+    \draw[->,draw=oraclefold!72,line width=0.55pt] (5.10,2.18) .. controls (5.26,2.02) and (5.74,2.02) .. (5.90,2.18);
+    \node[anchor=west,font=\bfseries,text=oraclefold!75!black] at (5.82,2.08) {$\theta_i^\star$};
+    \node[micro,anchor=west] at (4.04,2.00) {no test folds};
+
+    \draw[rounded corners=5pt,draw=reusefold!28,fill=reusefold!5] (3.80,0.18) rectangle (6.70,1.64);
+    \node[micro,anchor=west,text=reusefold!72!black] at (3.96,1.53) {alternative candidates};
+
+    \node[rounded corners=2pt,draw=defaultgray!42,fill=white,font=\tiny\bfseries,text=defaultgray!75!black,minimum width=0.62cm,inner xsep=1pt,inner ysep=1pt]
+        (nobo) at (4.34,1.22) {no BO};
+    \draw[->,draw=defaultgray!55,line width=0.45pt,shorten >=1.5pt] (nobo.east) -- (5.08,1.22);
+    \draw[rounded corners=2pt,draw=defaultgray!35,fill=white] (5.10,1.08) rectangle (6.04,1.36);
+    \node[font=\tiny\bfseries,text=defaultgray!80!black] at (5.57,1.22) {default};
+
+    \node[rounded corners=2pt,draw=oraclefold!48,fill=oraclefold!14,font=\tiny\bfseries,text=oraclefold!78!black,inner xsep=2pt,inner ysep=1pt]
+        at (4.24,0.69) {BO};
+    \draw[->,draw=oraclefold!70,line width=0.50pt] (4.48,0.69) -- (4.74,0.69);
+    \draw[rounded corners=2pt,draw=oraclefold!34,fill=white] (4.80,0.52) rectangle (5.56,0.86);
+    \node[font=\tiny\bfseries,text=oraclefold!78!black] at (5.18,0.69) {overall};
+    \draw[rounded corners=2pt,draw=oraclefold!34,fill=white] (5.66,0.52) rectangle (6.42,0.86);
+    \node[font=\tiny\bfseries,text=oraclefold!78!black] at (6.04,0.69) {sample};
+
+    \node[anchor=west,font=\bfseries,text=structure.fg] at (7.65,3.42) {3. Train + test};
+    \draw[coloredarrow=oraclefold] (6.58,2.48) -- (9.20,2.15);
+    \node[font=\tiny\bfseries,text=oraclefold!75!black,anchor=west]
+        at (7.52,2.44) {$\theta_i^\star$};
+    \draw[coloredarrow=reusefold] (6.70,1.06) -- (9.20,1.92);
+    \node[font=\tiny\bfseries,text=reusefold!75!black,anchor=west]
+        at (7.60,1.26) {$\theta$};
+
+    \node[font=\bfseries,anchor=east] at (9.00,2.68) {train IF};
+    \foreach \i in {0,1,2,3}{
+        \node[fold,fill=benignfold!78,minimum width=0.34cm,minimum height=0.34cm] at ({9.23+0.42*\i},2.68) {};
+    }
+    \draw[coloredarrow=benignfold] (9.86,2.46) -- (9.86,2.22);
+
+    \draw[route=evalfold,line width=0.65pt] (9.30,1.78) rectangle (10.42,2.22);
+    \node[font=\bfseries,text=evalfold!72!black] at (9.86,2.00) {IF};
+    \node[font=\bfseries,anchor=east] at (9.00,1.18) {test IF};
+    \draw[coloredarrow=evalfold] (9.86,1.78) -- (9.86,1.33);
+    \node[fold,fill=benignfold!15,draw=benignfold!58,minimum width=0.28cm,minimum height=0.29cm] at (9.23,1.18) {};
+    \foreach \i in {0,1,2,3}{
+        \node[fold,fill=attackfold!15,draw=attackfold!58,minimum width=0.28cm,minimum height=0.29cm] at ({9.65+0.42*\i},1.18) {};
+    }
+
+    \draw[coloredarrow=evalfold] (9.86,1.00) -- (9.86,0.58);
+    \draw[rounded corners=4pt,draw=structure.fg!35,fill=structure.fg!8] (8.92,0.18) rectangle (10.24,0.58);
+    \node[font=\bfseries,text=structure.fg] at (9.58,0.38) {$p_{\text{robust}}$};
+
+    \draw[->,draw=structure.fg!70,line width=0.75pt,dashed]
+        (11.82,3.75) .. controls (10.80,4.46) and (1.50,4.46) .. (0.34,3.75);
+    \node[font=\bfseries\tiny,text=structure.fg,fill=white,inner xsep=2pt,inner ysep=1pt]
+        at (6.16,4.45) {repeat outer loop $\times 5$};
+
+    \draw[->,draw=structure.fg!75,line width=0.82pt] (10.30,0.38) -- (10.82,0.38);
+    \draw[rounded corners=4pt,draw=structure.fg!35,fill=structure.fg!8] (10.90,0.10) rectangle (12.18,0.66);
+    \node[font=\bfseries\scriptsize,text=structure.fg,align=center] at (11.54,0.38) {mean\\[-0.18em]$p_{\text{robust}}$};
+\end{tikzpicture}%
+}

@@ -1,4 +1,125 @@
-\section{Results}
+\begin{frame}[plain]
+    \centering
+    \vfill
+    {\color{structure.fg}\large\bfseries Research Question 1}\par
+    \vspace{1.15em}
+    \resizebox{0.99\linewidth}{!}{\bfseries If \(\theta\) is reused, how much performance is lost compared with reconfiguring for the current network context?}\par
+    \vfill
+\end{frame}
+
+\begin{frame}{Day-to-Day Transferability: Method}
+    \vspace{-0.35em}
+    \begin{columns}[T,onlytextwidth]
+        \column{0.43\linewidth}
+        \scriptsize
+        \begin{itemize}
+            \setlength\itemsep{0.45em}
+            \item<1-> BO gives one oracle configuration per day; pick a source \(D_9\) with \(\theta_9^{\star}\).
+            \item<2-> Diagonal cells are oracle references, not transfer evaluations.
+            \item<3-> Keep \(\theta_9^{\star}\) fixed and evaluate it on every target day \(D_i\), excluding \(i=9\).
+            \item<4-> Repeating this for all source days fills the off-diagonal matrix.
+            \item<5-> Each row \(R_i\) groups the transfer losses for one target day \(D_i\).
+        \end{itemize}
+
+        \column{0.55\linewidth}
+        \centering
+        \input{figures/results/day_transfer_method_visual}
+    \end{columns}
+    \begin{tikzpicture}[remember picture,overlay]
+        \visible<5->{\node[anchor=south,text=structure.fg,font=\footnotesize,align=center,text width=0.82\paperwidth]
+            at ([yshift=0.34cm]current page.south) {\(\Longrightarrow\) Lower row losses indicate safer configuration reuse.};}
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Day-to-Day Transferability: Results}
+    \scriptsize
+    \begin{columns}[T,onlytextwidth]
+        \column{0.39\linewidth}
+        \begin{itemize}
+            \setlength\itemsep{0.42em}
+            \item<1-> Each box summarizes one target day
+                  \(R_i=\{\Delta(i,j): j\neq i\}\).
+            \item<1-> Wide boxes and outliers show sensitivity to the chosen source day.
+            \item<1-> Days 5--7 and 10 are the riskiest; losses can approach 40\%.
+        \end{itemize}
+
+        \visible<2->{%
+            \vspace{0.45em}
+            \begin{beamercolorbox}[wd=\linewidth,sep=0.55em,rounded=true,shadow=true]{takebox}
+                \textbf{Cross-year transferability:} transfer IDS2017-tuned configurations to IDS2018 for common attack types; same behavior.
+            \end{beamercolorbox}}
+
+        \column{0.58\linewidth}
+        \centering
+        \includegraphics[height=0.70\textheight,keepaspectratio]{/home/oanser/Documents/work/noms2026/sections/figures/transferability_box_plot.pdf}
+
+        \vspace{0.15em}
+        {\scriptsize\color{black!70}Transfer loss distributions by target day}
+    \end{columns}
+    \begin{tikzpicture}[remember picture,overlay]
+        \visible<3->{\node[anchor=south,draw=structure.fg!65,fill=takebg,rounded corners=4pt,line width=0.9pt,align=center,text width=0.82\paperwidth,inner sep=4.5pt,font=\footnotesize]
+            at ([yshift=0.22cm]current page.south) {\(\Longrightarrow\) \textbf{RQ1:} The cost of reusing \(\theta\) depends on the target context: some days lose up to 40\%; same-attack reuse may still need reconfiguration.};}
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[plain]
+    \centering
+    \vfill
+    {\color{structure.fg}\large\bfseries Research Question 2}\par
+    \vspace{1.15em}
+    \resizebox{0.99\linewidth}{!}{\bfseries Can simple low-budget strategies approach the performance of full reconfiguration?}\par
+    \vfill
+\end{frame}
+
+\begin{frame}{Alternative 1 -- Default}
+    \scriptsize
+
+    \vspace{1.4em}
+    \input{figures/study_design/reuse_default_visual}
+
+    \vfill
+    \centering
+    {\color{structure.fg}\small
+        \(\Longrightarrow\) Zero tuning cost; tests whether the library default is robust enough across changing network contexts.}
+\end{frame}
+
+\begin{frame}{Alternative 2 -- Single Overall}
+    \scriptsize
+
+    \vspace{1.4em}
+    \input{figures/study_design/reuse_overall_visual}
+
+    \vfill
+    \centering
+    {\color{structure.fg}\small
+        \(\Longrightarrow\) Optimize once on heterogeneous historical traffic; amortize BO effort into one reusable configuration.}
+\end{frame}
+
+\begin{frame}{Alternative 3 -- 10\% Sample BO}
+    \scriptsize
+
+    \vspace{1.4em}
+    \input{figures/study_design/reuse_sample_visual}
+
+    \vfill
+    \centering
+    {\color{structure.fg}\small
+        \(\Longrightarrow\) Keep day-specific adaptation, but reduce BO cost by tuning on a stratified 10\% subset.}
+\end{frame}
+
+\begin{frame}{Nested Cross-Validation}
+    \scriptsize
+    \centering
+    \input{figures/study_design/nested_cv_protocol_static_visual}
+
+    \vspace{0.6em}
+    \centering
+    \begin{minipage}[c][1.15cm][c]{0.92\linewidth}
+        \centering
+        {\color{structure.fg}\small
+            \(\Longrightarrow\) Default uses no BO; overall and sample are BO-derived alternative candidates, then all use the same IF train/test evaluation.}
+    \end{minipage}
+\end{frame}
 
 \begin{frame}[t]{Main Results}
     \scriptsize
@@ -10,140 +131,26 @@
             \item<2-> The aggregate score hides unstable days.
             \item<3-> Fixed configurations are not uniformly robust.
             \item<4-> Under-sampling lowers tuning effort, but not instability.
-            \item<5-> Day-level evaluation exposes deployment risk.
+                  % \item<5-> Day-level evaluation exposes deployment risk.
         \end{itemize}
 
         \column{0.67\linewidth}
         \centering
-        \only<1>{\includegraphics[width=\linewidth,height=0.71\textheight,keepaspectratio]{figures/results/main_results_overlays/main_results_overlay_1.pdf}}
-        \only<2>{\includegraphics[width=\linewidth,height=0.71\textheight,keepaspectratio]{figures/results/main_results_overlays/main_results_overlay_2.pdf}}
-        \only<3>{\includegraphics[width=\linewidth,height=0.71\textheight,keepaspectratio]{figures/results/main_results_overlays/main_results_overlay_3.pdf}}
-        \only<4>{\includegraphics[width=\linewidth,height=0.71\textheight,keepaspectratio]{figures/results/main_results_overlays/main_results_overlay_4.pdf}}
-        \only<5>{\includegraphics[width=\linewidth,height=0.71\textheight,keepaspectratio]{figures/results/main_results_overlays/main_results_overlay_5.pdf}}
+        \begin{overlayarea}{\linewidth}{0.71\textheight}
+            \centering
+            \only<1>{\includegraphics[width=\linewidth,height=0.71\textheight,keepaspectratio]{figures/results/main_results_overlays/main_results_overlay_1.pdf}}
+            \only<2>{\includegraphics[width=\linewidth,height=0.71\textheight,keepaspectratio]{figures/results/main_results_overlays/main_results_overlay_2.pdf}}
+            \only<3>{\includegraphics[width=\linewidth,height=0.71\textheight,keepaspectratio]{figures/results/main_results_overlays/main_results_overlay_3.pdf}}
+            \only<4>{\includegraphics[width=\linewidth,height=0.71\textheight,keepaspectratio]{figures/results/main_results_overlays/main_results_overlay_4.pdf}}
+            \only<5>{\includegraphics[width=\linewidth,height=0.71\textheight,keepaspectratio]{figures/results/main_results_overlays/main_results_overlay_5.pdf}}
+        \end{overlayarea}
 
         \vspace{0.15em}
         {\scriptsize\color{black!70}Daily robustness across configuration strategies}
     \end{columns}
 
-    \vfill
-    \centering
-    \visible<5->{\color{structure.fg}\small
-        \(\Longrightarrow\) Low-budget configurations do not reliably approximate the daily BO oracle.}
-\end{frame}
-
-\begin{frame}[plain]
-    \centering
-    \vfill
-    {\color{structure.fg}\Large\bfseries Research Question 2}
-
-    \vspace{1.2em}
-    \begin{minipage}{0.88\linewidth}
-        \centering
-        {\LARGE\bfseries If \(\theta\) is reused,\par}
-        \vspace{0.25em}
-        {\LARGE\bfseries how much performance is lost\par}
-        \vspace{0.25em}
-        {\LARGE\bfseries compared with reconfiguring\par}
-        \vspace{0.25em}
-        {\LARGE\bfseries for the current network context?\par}
-    \end{minipage}
-    \vfill
-\end{frame}
-
-\begin{frame}{Day-to-Day Transferability: Method}
-    \vspace{-0.35em}
-    \begin{columns}[T,onlytextwidth]
-        \column{0.43\linewidth}
-        \scriptsize
-        \begin{itemize}
-            \setlength\itemsep{0.45em}
-            \item<1-> BO gives one oracle configuration per day; pick a source \(D_j\) with \(\theta_j^{\star}\).
-            \item<2-> Diagonal cells are oracle references, not transfer evaluations.
-            \item<3-> Keep \(\theta_j^{\star}\) fixed and evaluate it on every target day \(D_i\), excluding \(i=j\).
-            \item<4-> Repeating this for all source days fills the off-diagonal matrix.
-            \item<5-> Example: \(R_0\) collects all transfer losses for target day \(D_0\) and becomes one box plot.
-        \end{itemize}
-
-        \vfill
-        \visible<5->{\color{structure.fg}\footnotesize
-            \(\Longrightarrow\) Lower row losses indicate safer configuration reuse.}
-
-        \column{0.55\linewidth}
-        \centering
-        \input{figures/results/day_transfer_method_visual}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Day-to-Day Transferability: Results}
-    \scriptsize
-    \begin{columns}[T,onlytextwidth]
-        \column{0.38\linewidth}
-        \begin{itemize}
-            \setlength\itemsep{0.45em}
-            \item Each box summarizes one target day
-                  \(R_i=\{\Delta(i,j): j\neq i\}\).
-            \item Low medians indicate small transfer loss for most source configurations.
-            \item Wide boxes and outliers show sensitivity to the chosen source day.
-            \item Days 5--7 and 10 are the riskiest; losses can approach 40\%.
-        \end{itemize}
-
-        \vfill
-        {\color{structure.fg}\footnotesize
-            \(\Longrightarrow\) Transferability is day-dependent, not universal.}
-
-        \column{0.59\linewidth}
-        \centering
-        \includegraphics[height=0.70\textheight,keepaspectratio]{/home/oanser/Documents/work/noms2026/sections/figures/transferability_box_plot.pdf}
-
-        \vspace{0.15em}
-        {\scriptsize\color{black!70}Transfer loss distributions by target day}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Cross-Year Attack Transfer: Method}
-    \vspace{-0.35em}
-    \begin{columns}[T,onlytextwidth]
-        \column{0.40\linewidth}
-        \scriptsize
-        \begin{itemize}
-            \setlength\itemsep{0.45em}
-            \item<1-> Select one of the 18 attack families common to IDS2017 and IDS2018.
-            \item<2-> Build paired datasets for the same attack \(a_k\) in both years.
-            \item<3-> BO gives \(\theta^{\star\,2017}_{a_k}\) and the IDS2018 oracle \(\theta^{\star\,2018}_{a_k}\).
-            \item<4-> Evaluate both configurations on \(\mathcal{D}^{2018}_{a_k}\) and measure the gap.
-        \end{itemize}
-
-        \vfill
-        \visible<4->{\color{structure.fg}\footnotesize
-            \(\Longrightarrow\) Same attack does not imply same robust configuration.}
-
-        \column{0.58\linewidth}
-        \centering
-        \input{figures/results/attack_transfer_method_visual}
-    \end{columns}
-\end{frame}
-
-\begin{frame}{Cross-Year Attack Transfer: Results}
-    \scriptsize
-    \begin{columns}[T,onlytextwidth]
-        \column{0.38\linewidth}
-        \begin{itemize}
-            \setlength\itemsep{0.45em}
-            \item Each attack family compares IDS2017-tuned transfer against the IDS2018 oracle.
-            \item Attacks 23, 17, 16, 14, and 26 transfer close to the oracle.
-            \item Attacks 31, 1, and 30 show much larger cross-year gaps.
-            \item Same attack family is therefore not enough to guarantee robust reuse.
-        \end{itemize}
-
-        \vfill
-        {\color{structure.fg}\footnotesize
-            \(\Longrightarrow\) Cross-year context changes can still require reconfiguration.}
-
-        \column{0.59\linewidth}
-        \centering
-        \includegraphics[width=\linewidth,height=0.68\textheight,keepaspectratio]{/home/oanser/Documents/work/noms2026/sections/figures/attacks_transfer_IDS2017_to_IDS2018.pdf}
-
-        \vspace{0.15em}
-        {\scriptsize\color{black!70}IDS2017 configuration transferred to IDS2018 by attack family}
-    \end{columns}
+    \begin{tikzpicture}[remember picture,overlay]
+        \visible<5->{\node[anchor=south,draw=structure.fg!65,fill=takebg,rounded corners=4pt,line width=0.9pt,align=center,text width=0.78\paperwidth,inner sep=4pt,font=\footnotesize]
+            at ([yshift=0.12cm]current page.south) {\(\Longrightarrow\) \textbf{RQ2:} Simple low-budget strategies do not reliably match full reconfiguration.};}
+    \end{tikzpicture}
 \end{frame}

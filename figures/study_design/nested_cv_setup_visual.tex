@@ -4,7 +4,6 @@
     \definecolor{attackfold}{RGB}{215,90,75}
     \definecolor{methodaccent}{RGB}{82,92,125}
     \definecolor{oraclefold}{RGB}{82,92,125}
-    \definecolor{reusefold}{RGB}{82,92,125}
     \definecolor{evalfold}{RGB}{82,92,125}
 
     \tikzset{
@@ -18,12 +17,10 @@
         every node/.style={text=black!84}
     }
 
-    % Fixed canvas and panel outlines keep all overlays stable.
     \draw[stage] (0,0) rectangle (3.05,3.75);
     \draw[stage] (3.55,0) rectangle (6.90,3.75);
     \draw[stage] (7.40,0) rectangle (12.35,3.75);
 
-    % Step 1: outer fold split.
     \visible<1->{
         \node[anchor=west,font=\bfseries,text=structure.fg] at (0.25,3.42) {1. Split $\times 5$};
 
@@ -44,45 +41,32 @@
         \node[micro,align=center] at (2.19,0.82) {$4$ test\\folds};
     }
 
-    % Step 2: nested BO configuration or fixed reuse.
     \visible<2->{
-        \node[anchor=west,font=\bfseries,text=structure.fg] at (3.80,3.42) {2. Configure $\theta$};
+        \node[anchor=west,font=\bfseries,text=structure.fg] at (3.80,3.42) {2. BO selects $\theta_i^\star$};
         \draw[arrow] (3.05,1.88) -- (3.55,1.88);
 
-        \draw[route=oraclefold] (3.86,1.90) rectangle (6.58,3.08);
-        \node[badge=oraclefold,text=oraclefold!70!black] at (4.23,2.48) {BO};
-        \draw[rounded corners=3pt,draw=oraclefold!48,dashed,fill=oraclefold!5] (4.70,2.18) rectangle (6.28,2.88);
-        \node[anchor=west,font=\tiny\bfseries,text=oraclefold!75!black] at (4.82,2.72) {inner CV $\times4$};
-        \foreach \i in {0,1,2}{
-            \node[fold,fill=benignfold!72,minimum width=0.22cm,minimum height=0.22cm] at ({4.88+0.26*\i},2.42) {};
-        }
-        \node[fold,fill=benignfold!14,draw=benignfold!56,minimum width=0.22cm,minimum height=0.22cm] at (5.66,2.42) {};
-        \node[font=\tiny,text=black!55] at (5.88,2.42) {+};
-        \node[fold,fill=attackfold!72,minimum width=0.22cm,minimum height=0.22cm] at (6.10,2.42) {};
-        \draw[->,draw=oraclefold!72,line width=0.55pt] (5.10,2.18) .. controls (5.26,2.02) and (5.74,2.02) .. (5.90,2.18);
-        \node[anchor=west,font=\bfseries,text=oraclefold!75!black] at (5.82,2.08) {$\theta_i^\star$};
-        \node[micro,anchor=west] at (4.04,2.00) {no test folds};
+        \draw[route=oraclefold] (3.82,0.74) rectangle (6.64,3.00);
+        \node[badge=oraclefold,text=oraclefold!70!black] at (4.22,2.14) {BO};
+        \node[micro,anchor=west] at (4.00,0.94) {no test folds};
 
-        \draw[route=reusefold] (3.80,0.34) rectangle (6.70,1.58);
-        \node[badge=reusefold,text=reusefold!75!black] at (4.22,0.98) {$\theta$};
-        \foreach \y/\lab in {1.32/{\theta_{\mathrm{default}}},0.98/{\theta^{\star}_{\mathrm{overall}}},0.64/{\theta^{\star}_{\mathrm{sample},i}}}{
-            \draw[rounded corners=2pt,draw=reusefold!32,fill=reusefold!10] (4.60,{\y-0.145}) rectangle (6.22,{\y+0.145});
-            \node[font=\tiny,text=reusefold!78!black] at (5.41,\y) {$\lab$};
+        \draw[rounded corners=3pt,draw=oraclefold!48,dashed,fill=oraclefold!5] (4.70,1.64) rectangle (6.30,2.54);
+        \node[anchor=west,font=\tiny\bfseries,text=oraclefold!75!black] at (4.82,2.36) {inner CV $\times4$};
+        \foreach \i in {0,1,2}{
+            \node[fold,fill=benignfold!72,minimum width=0.22cm,minimum height=0.22cm] at ({4.88+0.26*\i},2.04) {};
         }
-        \node[micro,anchor=west,text=reusefold!72!black] at (4.16,0.20) {alternative candidates};
+        \node[fold,fill=benignfold!14,draw=benignfold!56,minimum width=0.22cm,minimum height=0.22cm] at (5.66,2.04) {};
+        \node[font=\tiny,text=black!55] at (5.88,2.04) {+};
+        \node[fold,fill=attackfold!72,minimum width=0.22cm,minimum height=0.22cm] at (6.10,2.04) {};
+        \draw[->,draw=oraclefold!72,line width=0.55pt] (5.10,1.64) .. controls (5.26,1.46) and (5.74,1.46) .. (5.90,1.64);
+        \node[anchor=west,font=\bfseries,text=oraclefold!75!black] at (5.70,1.42) {$\theta_i^\star$};
     }
 
-    % Step 3: common outer evaluation and one fold score.
     \visible<3->{
         \node[anchor=west,font=\bfseries,text=structure.fg] at (7.65,3.42) {3. Train + test};
 
-        \draw[coloredarrow=oraclefold] (6.58,2.48) -- (9.20,2.15);
+        \draw[coloredarrow=oraclefold] (6.64,2.00) -- (9.20,2.00);
         \node[font=\tiny\bfseries,text=oraclefold!75!black,anchor=west]
-            at (7.52,2.44) {$\theta_i^\star$};
-
-        \draw[coloredarrow=reusefold] (6.70,1.06) -- (9.20,1.92);
-        \node[font=\tiny\bfseries,text=reusefold!75!black,anchor=west]
-            at (7.60,1.26) {$\theta$};
+            at (7.52,2.12) {$\theta_i^\star$};
 
         \node[font=\bfseries,anchor=east] at (9.00,2.68) {train IF};
         \foreach \i in {0,1,2,3}{
@@ -104,7 +88,6 @@
         \node[font=\bfseries,text=structure.fg] at (9.58,0.38) {$p_{\text{robust}}$};
     }
 
-    % Step 4: repeat the outer loop before averaging.
     \visible<4->{
         \draw[->,draw=structure.fg!70,line width=0.75pt,dashed]
             (11.82,3.75) .. controls (10.80,4.46) and (1.50,4.46) .. (0.34,3.75);
@@ -112,7 +95,6 @@
             at (6.16,4.45) {repeat outer loop $\times 5$};
     }
 
-    % Step 5: aggregate after all repeated folds.
     \visible<5->{
         \draw[->,draw=structure.fg!75,line width=0.82pt] (10.30,0.38) -- (10.82,0.38);
         \draw[rounded corners=4pt,draw=structure.fg!35,fill=structure.fg!8] (10.90,0.10) rectangle (12.18,0.66);

@@ -20,7 +20,7 @@
     % Fixed panels keep overlays stable.
     \draw[panel] (0,0.20) rectangle (4.05,5.85);
     \draw[panel] (4.35,0.20) rectangle (8.10,5.85);
-    \draw[panel] (8.40,0.20) rectangle (12.35,5.85);
+    \draw[panel] (8.40,0.20) rectangle (12.75,5.85);
 
     % Step 1: detector path.
     \visible<1->{
@@ -98,7 +98,7 @@
             (10.62,3.60) .. controls (11.30,3.64) and (11.85,3.48) .. (11.85,3.05);
         \node[anchor=west,font=\bfseries,text=structure.fg] at (11.02,3.28) {ROC curve};
         \node[box=structure.fg,minimum width=1.72cm,minimum height=0.58cm] at (11.18,1.10)
-            {$p_{\text{robust}}=\mathrm{AUC}$};
+            {$p_{\text{robust}}=\mathrm{ROC\text{-}AUC}$};
         \draw[arrow] (11.35,2.26) -- (11.25,1.40);
         \node[anchor=west,font=\scriptsize,text=black!62] at (9.25,0.50) {try all thresholds $\tau$};
     }

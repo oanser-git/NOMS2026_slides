@@ -46,9 +46,9 @@ But the deployment traffic is not fixed. The volume can change, the traffic comp
 
 From this setting, we ask two questions.
 
-First, can cheaper strategies, such as defaults or low-budget optimization, get close to the oracle-optimized reference without full reconfiguration?
+First, if we keep a configuration fixed and reuse it, how much performance do we lose compared with reconfiguring for the current network context?
 
-Second, if we keep a configuration fixed and reuse it, how much performance do we lose compared with reconfiguring for the current network context?
+Second, can simple low-budget strategies, such as defaults or reduced-budget optimization, get close to the performance of full reconfiguration?
 
 In other words, we measure the performance penalty of avoiding full reconfiguration in AD IDS.
 
@@ -81,17 +81,75 @@ So the question is not whether one threshold happens to be good. The question is
 
 These choices can change the anomaly scores even when the training and testing data are the same.
 
-**Click 4.** For each day, Bayesian optimization gives us an oracle reference configuration, \(\theta_i^\star = BO(D_i)\). This is not meant to be an operationally cheap solution. It is the reference we compare against when we ask how much robustness cheaper strategies lose.
+**Click 4.** For each day, Bayesian optimization gives us an oracle reference configuration, \(\theta_i^\star = BO(D_i)\). This is not meant to be an operationally cheap solution. It is the reference we compare against when we ask how much robustness simple low-budget strategies lose.
 
-## Slide 6: Research Question 1
+## Slide 6: Experimental Setup - Data Splits and BO Search
+
+This slide explains how we compute the oracle reference without using test traffic during configuration.
+
+**Click 1.** We start with an outer split. For benign traffic, four folds are used for training and one fold is held out for testing. For attack traffic, one fold is available during configuration and four folds are held out for testing.
+
+The key point is that the test folds stay outside the configuration step.
+
+**Click 2.** Bayesian optimization happens only on the training side. It uses inner cross-validation and the training-side attack fold to select the oracle configuration \(\theta_i^\star\).
+
+**Click 3.** Once \(\theta_i^\star\) is selected, we train Isolation Forest on the benign training folds and test on held-out benign and attack traffic. This gives one \(p_{\text{robust}}\) value.
+
+**Click 4.** We repeat the same outer construction over the five folds.
+
+**Click 5.** The oracle reference reported for a day is the mean \(p_{\text{robust}}\) over these folds.
+
+## Slide 7: Research Question 1
 
 This brings us to the first research question.
 
-Can cheaper strategies approach the oracle-optimized reference without running full reconfiguration every time?
+If a configuration is reused, how much performance is lost compared with reconfiguring for the current network context?
 
-The next three slides define the cheaper strategies we test.
+The next experiments measure this loss when configurations are transferred across days and across years.
 
-## Slide 7: Experimental Setup - Alternative 1, Default
+## Slide 8: Day-to-Day Transferability - Method
+
+The next question is whether optimized configurations transfer across days.
+
+**Click 1.** Bayesian optimization gives one oracle configuration per day. As a concrete example, we pick source day \(D_9\), and take its optimized configuration \(\theta_9^\star\).
+
+**Click 2.** The diagonal cells are the oracle references. They are not transfer evaluations, because the source and target day are the same.
+
+**Click 3.** For transfer, we keep \(\theta_9^\star\) fixed and evaluate it on every other target day \(D_i\), excluding \(i=9\).
+
+This gives us the loss from using a configuration optimized on a different day.
+
+**Click 4.** Repeating this for all source days fills the off-diagonal matrix. Each column corresponds to one source configuration, and each row corresponds to one target day.
+
+**Click 5.** Each row \(R_i\) groups the transfer losses for one target day \(D_i\). For example, row \(R_0\) collects losses for target day \(D_0\) from all other source days.
+
+Lower row losses mean safer configuration reuse for that target day.
+
+## Slide 9: Day-to-Day Transferability - Results
+
+**Click 1.** Here, each box summarizes one target day.
+
+The value inside a box is the performance decrease when we use configurations transferred from other days instead of the oracle configuration for that target day.
+
+Wide boxes and outliers mean that the result depends strongly on which source day we choose.
+
+The key observation is that transferability is day-dependent, not reliable. Some days are relatively safe, but days 5, 6, 7, and 10 are much riskier. On these days, the loss can approach 40 percent.
+
+So even if a configuration was optimal somewhere in the benchmark, it may be a poor choice for another deployment day.
+
+**Click 2.** We also tested cross-year transferability: configurations tuned on IDS2017 were reused on IDS2018 for common attack types. We observed the same behavior.
+
+**Click 3.** The bottom box gives the answer to the first research question: the cost of reusing a configuration depends on the target context. Some days lose very little, but others can lose up to 40 percent. Even for the same attack type across years, reuse may still require reconfiguration.
+
+## Slide 10: Research Question 2
+
+This brings us to the second research question.
+
+Can simple low-budget strategies approach the performance of full reconfiguration?
+
+The next three slides define the simple low-budget strategies we test.
+
+## Slide 11: Alternative 1 -- Default
 
 The first low-cost strategy is the simplest one: use the software default configuration.
 
@@ -101,7 +159,7 @@ For each day, we keep \(\theta_{\text{default}}\) unchanged and measure \(p_{\te
 
 The baseline question is therefore: do we need configuration search at all, or are defaults already robust enough when the network context changes?
 
-## Slide 8: Experimental Setup - Alternative 2, Single Overall
+## Slide 12: Alternative 2 -- Single Overall
 
 The second strategy is to optimize once on a heterogeneous pool of historical data.
 
@@ -113,7 +171,7 @@ This is attractive because the BO effort is paid only once. It also seems reason
 
 The question is whether one global configuration can cover all deployment contexts, or whether it hides failures on specific days.
 
-## Slide 9: Experimental Setup - Alternative 3, 10% Sample BO
+## Slide 13: Alternative 3 -- 10% Sample BO
 
 The third strategy keeps day-specific adaptation, but reduces the optimization effort.
 
@@ -123,29 +181,23 @@ BO then returns a day-specific sampled configuration, and we evaluate that confi
 
 This tests a practical compromise: can a small representative sample recover most of the robustness of full daily optimization?
 
-If it works, it would be a cheaper way to adapt to each deployment context.
+If it works, it would be a lower-cost way to adapt to each deployment context.
 
-## Slide 10: Experimental Setup - Nested Cross-Validation
+## Slide 14: Nested Cross-Validation
 
-This slide shows how we avoid test leakage.
+This slide summarizes the common evaluation protocol used for the oracle and for the three simple low-budget strategies.
 
-**Click 1.** We use a nested cross-validation protocol. For benign traffic, four folds are used for training and one fold is used for testing. For attack traffic, one fold is used during configuration and four folds are kept for testing.
+The outer split is the same as before: benign train and test folds, and attack configuration and test folds.
 
-The key point is that the test folds are not used to choose \(\theta\).
+In the configuration step, there are two cases. The oracle uses BO inside the training data to select \(\theta_i^\star\). The default strategy uses no BO. The overall and sample strategies are BO-derived alternative candidates that are selected before the final evaluation.
 
-**Click 2.** The configuration step happens inside the training data. For BO, the validation uses inner benign folds plus one attack training fold. For reuse strategies, we skip BO and use the fixed candidate configuration.
+After a configuration is fixed, all strategies use the same train-and-test path. We train Isolation Forest on benign training folds and evaluate on the same held-out benign and attack test folds.
 
-**Click 3.** Once \(\theta\) is fixed, we train Isolation Forest on the benign training folds and evaluate on the same held-out test folds.
+This is important because the comparison is fair: the strategies differ in how \(\theta\) is chosen, not in the test data used to evaluate it.
 
-**Click 4.** We do not compute the final value from only one split. We repeat the same outer loop over the five folds.
+## Slide 15: Main Results
 
-**Click 5.** Each fold gives one \(p_{\text{robust}}\) score, and the reported robustness score is the mean \(p_{\text{robust}}\) over the five folds.
-
-This protocol is important because otherwise a configuration could look robust simply because it was selected using the test data.
-
-## Slide 11: Main Results
-
-Now I move to the main results.
+Now I move to the results for the second research question.
 
 **Click 1.** The first curve is the daily BO oracle. This is the reference where each day gets its own optimized configuration. As expected, it stays consistently high.
 
@@ -161,99 +213,25 @@ So defaults are not uniformly robust when the network context changes.
 
 **Click 4.** The 10 percent sample BO strategy reduces optimization effort, but it does not remove instability. It still has low values on several days, including early days, day 7, and day 13.
 
-This means that sampling can make optimization cheaper, but the sample may not preserve the information needed to choose a robust configuration.
+This means that under-sampling can lower optimization cost, but the sample may not preserve the information needed to choose a robust configuration.
 
 **Click 5.** The deployment view makes the risk visible. The same risky days appear across strategies, but the performance penalty of using the wrong configuration differs.
 
-The takeaway is that low-budget configurations do not reliably approximate the daily BO oracle.
+The answer to the second research question is that simple low-budget strategies do not reliably match full reconfiguration.
 
-This answers the first research question. Next, we move from low-cost alternatives to configuration reuse across contexts.
+## Slide 16: Takeaway
 
-## Slide 12: Research Question 2
+To conclude, the message is visual here.
 
-This brings us to the second research question.
+On the left, transfer did not reliably work. A configuration optimized in one context can lose robustness when reused in another context.
 
-If a configuration is reused, how much performance is lost compared with reconfiguring for the current network context?
+On the right, the simple low-budget strategies reduce configuration effort, but they are not reliably close to full reconfiguration.
 
-The next experiments measure this loss when configurations are transferred across days and across years.
+So the operational lesson is simple: for reliable AD IDS performance, it is better to reconfigure for each network context, or at least trigger reconfiguration when the context changes enough.
 
-## Slide 13: Day-to-Day Transferability - Method
+**Click.** As a final pointer, this related paper gives one way to make low-budget reconfiguration more guided. Instead of trying defaults or blind reuse, meta-learning suggests promising configurations to test first.
 
-The next question is whether optimized configurations transfer across days.
-
-**Click 1.** Bayesian optimization gives one oracle configuration per day. We pick one source day \(D_j\), and take its optimized configuration \(\theta_j^\star\).
-
-**Click 2.** The diagonal cells are the oracle references. They are not transfer evaluations, because the source and target day are the same.
-
-**Click 3.** For transfer, we keep \(\theta_j^\star\) fixed and evaluate it on every other target day \(D_i\), excluding \(i=j\).
-
-This gives us the loss from using a configuration optimized on a different day.
-
-**Click 4.** Repeating this for all source days fills the off-diagonal matrix. Each column corresponds to one source configuration, and each row corresponds to one target day.
-
-**Click 5.** For example, row \(R_0\) collects all transfer losses for target day \(D_0\), from all source days except \(D_0\) itself. We then summarize that row as one box plot.
-
-Lower row losses mean safer configuration reuse for that target day.
-
-## Slide 14: Day-to-Day Transferability - Results
-
-Here, each box summarizes one target day.
-
-The value inside a box is the performance decrease when we use configurations transferred from other days instead of the oracle configuration for that target day.
-
-Low medians mean that most source configurations transfer well to that target day.
-
-Wide boxes and outliers mean that the result depends strongly on which source day we choose.
-
-The key observation is that transferability is not universal. Some days are relatively safe, but days 5, 6, 7, and 10 are much riskier. On these days, the loss can approach 40 percent.
-
-So even if a configuration was optimal somewhere in the benchmark, it may be a poor choice for another deployment day.
-
-## Slide 15: Cross-Year Attack Transfer - Method
-
-The last experiment asks whether configurations transfer across years for the same attack family.
-
-**Click 1.** We start from the 18 attack families that are common to IDS2017 and IDS2018.
-
-**Click 2.** For one attack \(a_k\), we build a paired dataset in both years. The attack family is the same, but the year, topology, traffic volume, and surrounding context differ.
-
-The benign background is sampled once from IDS2017 and reused in both paired datasets. This keeps the benign side controlled while we compare the effect of year and attack context.
-
-**Click 3.** We run BO on the IDS2017 source data to get \(\theta_{a_k}^{\star 2017}\). We also run BO on the IDS2018 target data to get the IDS2018 oracle, \(\theta_{a_k}^{\star 2018}\).
-
-**Click 4.** Then we evaluate both configurations on the IDS2018 target data and measure the gap.
-
-The question is whether the same attack family implies the same robust configuration. The answer is not always.
-
-## Slide 16: Cross-Year Attack Transfer - Results
-
-This figure shows the transfer result for each attack family.
-
-For each attack, we compare the IDS2017-tuned configuration transferred to IDS2018 against the IDS2018 oracle.
-
-Some attacks transfer close to the oracle. In particular, attacks 23, 17, 16, 14, and 26 show small gaps.
-
-But other attacks have much larger cross-year gaps, especially attacks 31, 1, and 30.
-
-The message is that the attack label alone is not enough. Even for the same attack family, year-level context changes can change which configuration is robust.
-
-So cross-year context changes can still require reconfiguration.
-
-## Slide 17: Takeaway
-
-To conclude, the first takeaway is that retraining alone is not enough if the hyperparameters remain fixed.
-
-The detector can be retrained on new benign traffic, but if the configuration is poorly matched to the current context, robustness can still drop.
-
-Second, configuration reuse under changing contexts can remove a large part of the discrimination power. In our experiments, some transfer losses approach roughly one third to 40 percent, depending on the setting.
-
-Third, AD IDS should not treat configuration as a one-time setup. The configuration needs to be monitored and, when necessary, updated.
-
-A natural next direction is to avoid continuous expensive optimization, and instead trigger reconfiguration only when a lightweight change detector reports enough traffic change.
-
-The final message is: treat the configuration as an operational asset to monitor.
-
-## Slide 18: Acknowledgments
+## Slide 17: Acknowledgments
 
 I would like to acknowledge the funding support for this work.
 

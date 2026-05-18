@@ -1,0 +1,49 @@
+\begin{frame}[noframenumbering]{Backup: Cross-Year Attack Transfer Method}
+    \vspace{-0.35em}
+    \begin{columns}[T,onlytextwidth]
+        \column{0.40\linewidth}
+        \scriptsize
+        \begin{itemize}
+            \setlength\itemsep{0.45em}
+            \item<1-> Select a common attack family \(a_k\) and shared benign background \(B\).
+            \item<2-> Build paired IDS2017/IDS2018 datasets from \(a_k\) and \(B\).
+            \item<3-> BO gives \(\theta^{\star\,2017}_{a_k}\) and the IDS2018 oracle \(\theta^{\star\,2018}_{a_k}\).
+            \item<4-> Evaluate both configurations on \(\mathcal{D}^{2018}_{a_k}\) and measure the gap.
+        \end{itemize}
+
+        \column{0.58\linewidth}
+        \centering
+        \input{figures/results/attack_transfer_method_visual}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[noframenumbering]{Backup: Cross-Year Attack Transfer Results}
+    \scriptsize
+    \begin{columns}[T,onlytextwidth]
+        \column{0.38\linewidth}
+        \begin{itemize}
+            \setlength\itemsep{0.45em}
+            \item Each attack family compares IDS2017-tuned transfer against the IDS2018 oracle.
+            \item Attacks 23, 17, 16, 14, and 26 transfer close to the oracle.
+            \item Attacks 31, 1, and 30 show much larger cross-year gaps.
+            \item Same attack family is therefore not enough to guarantee robust reuse.
+        \end{itemize}
+
+        \column{0.59\linewidth}
+        \centering
+        \begin{tikzpicture}
+            \node[anchor=south west,inner sep=0] (img) at (0,0) {\includegraphics[width=\linewidth,height=0.68\textheight,keepaspectratio]{/home/oanser/Documents/work/noms2026/sections/figures/attacks_transfer_IDS2017_to_IDS2018.pdf}};
+            \begin{scope}[x={(img.south east)},y={(img.north west)}]
+                \fill[white] (0.43,0.015) rectangle (0.62,0.085);
+                \node[font=\scriptsize,text=black!78] at (0.525,0.050) {Common attack ID};
+            \end{scope}
+        \end{tikzpicture}
+
+        \vspace{0.15em}
+        {\scriptsize\color{black!70}IDS2017 configuration transferred to IDS2018 by attack family}
+    \end{columns}
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[anchor=south,text=structure.fg,font=\footnotesize,align=center,text width=0.82\paperwidth]
+        at ([yshift=0.34cm]current page.south) {\(\Longrightarrow\) \textbf{RQ1:} Same-attack reuse across years can still require reconfiguration.};
+    \end{tikzpicture}
+\end{frame}

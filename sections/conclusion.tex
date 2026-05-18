@@ -1,31 +1,73 @@
-\section{Conclusion}
-
 \begin{frame}{Takeaway}
-    \small
-    \begin{columns}[T,onlytextwidth]
-        \column{0.57\linewidth}
-        \begin{itemize}
-            \setlength\itemsep{0.8em}
-            \item Retraining alone does not guarantee robustness when hyperparameters stay fixed.
-            \item Configuration reuse under context changes can remove roughly one third of discrimination power.
-            \item AD IDS need automated reconfiguration, not a one-time setup.
-        \end{itemize}
-
-        \column{0.38\linewidth}
-        \setbeamercolor{takebox}{use={structure,normal text},
-            fg=normal text.fg,
-            bg=structure.fg!10!normal text.bg}
-        \begin{beamercolorbox}[wd=\linewidth,sep=1.2ex,rounded=true]{takebox}
-            \textbf{Next direction}\par
-            \vspace{0.35em}
-            Trigger reconfiguration only when a lightweight change detector reports enough traffic change.
-        \end{beamercolorbox}
-    \end{columns}
-
-    \vfill
     \centering
-    {\color{structure.fg}\normalsize
-        \(\Longrightarrow\) Treat the configuration as an operational asset to monitor.}
+    \vspace{-0.3em}
+    \resizebox{0.93\linewidth}{!}{%
+    \begin{tikzpicture}[font=\sffamily\small,line width=0.7pt]
+        \definecolor{transferblue}{RGB}{42,122,188}
+        \definecolor{configviolet}{RGB}{103,80,164}
+        \definecolor{riskred}{RGB}{205,70,70}
+        \definecolor{budgetorange}{RGB}{227,130,42}
+        \definecolor{fullgreen}{RGB}{42,150,95}
+
+        \path[use as bounding box] (0,-1.05) rectangle (12.8,5.9);
+
+        % Transfer panel.
+        \draw[rounded corners=5pt,draw=black!18,fill=white] (0.15,1.95) rectangle (6.15,5.65);
+        \node[font=\bfseries\large,text=riskred!80!black] at (3.15,5.28) {Transfer was unreliable};
+
+        \draw[rounded corners=4pt,draw=configviolet!45,fill=configviolet!9] (0.65,3.30) rectangle (2.45,4.35);
+        \node[font=\bfseries,text=configviolet!80!black] at (1.55,4.05) {Source};
+        \node[font=\scriptsize,text=black!70] at (1.55,3.70) {optimized};
+        \node[font=\scriptsize,text=black!70] at (1.55,3.42) {configuration};
+
+        \draw[rounded corners=4pt,draw=transferblue!45,fill=transferblue!9] (3.85,3.30) rectangle (5.65,4.35);
+        \node[font=\bfseries,text=transferblue!80!black] at (4.75,4.05) {Target};
+        \node[font=\scriptsize,text=black!70] at (4.75,3.70) {new network};
+        \node[font=\scriptsize,text=black!70] at (4.75,3.42) {context};
+
+        \draw[->,draw=riskred!80!black,dashed,line width=1.1pt] (2.58,3.83) -- (3.72,3.83);
+        \draw[draw=riskred!82!black,line width=1.3pt] (3.03,4.12) -- (3.28,3.55);
+        \draw[draw=riskred!82!black,line width=1.3pt] (3.28,4.12) -- (3.03,3.55);
+
+        \node[align=center,font=\bfseries,text=riskred!82!black] at (3.15,2.62) {reuse can lose robustness};
+        \node[align=center,font=\scriptsize,text=black!68] at (3.15,2.25) {up to 40\% in risky contexts};
+
+        % Low-budget panel.
+        \draw[rounded corners=5pt,draw=black!18,fill=white] (6.65,1.95) rectangle (12.65,5.65);
+        \node[font=\bfseries\large,text=budgetorange!85!black] at (9.65,5.28) {Low-budget was unstable};
+
+        \draw[draw=black!50,line width=0.45pt] (7.35,2.65) -- (11.95,2.65);
+        \draw[draw=black!50,line width=0.45pt] (7.35,2.65) -- (7.35,4.60);
+
+        \draw[rounded corners=2pt,draw=budgetorange!65!black,fill=budgetorange!22,line width=0.8pt]
+            (8.15,2.65) rectangle (9.10,3.55);
+        \node[font=\bfseries\scriptsize,text=budgetorange!75!black,align=center] at (8.62,2.30) {simple\\low-budget};
+        \draw[draw=budgetorange!75!black,line width=0.8pt] (8.03,3.85) -- (9.22,3.25);
+        \draw[draw=budgetorange!75!black,line width=0.8pt] (8.03,3.25) -- (9.22,3.85);
+
+        \draw[rounded corners=2pt,draw=fullgreen!65!black,fill=fullgreen!18,line width=0.8pt]
+            (10.15,2.65) rectangle (11.10,4.48);
+        \node[font=\bfseries\scriptsize,text=fullgreen!70!black,align=center] at (10.62,2.30) {full\\reconfiguration};
+        \node[font=\scriptsize,text=black!62,align=center] at (9.65,4.78) {more reliable reference};
+
+        % Bottom recommendation.
+        \draw[rounded corners=6pt,draw=structure.fg!65,fill=takebg,line width=1.1pt] (0.85,0.72) rectangle (11.95,1.78);
+        \node[align=center,font=\bfseries\large,text=black!82,text width=10.3cm] at (6.40,1.25)
+            {\(\Longrightarrow\) Reconfigure for each network context\\for more reliable AD IDS performance.};
+
+        % Related guided low-budget direction, revealed after the main takeaway.
+        \visible<2->{%
+        \draw[rounded corners=5pt,draw=structure.fg!55,fill=structure.fg!6,line width=0.9pt] (0.55,-0.95) rectangle (12.25,0.35);
+        \draw[rounded corners=5pt,draw=structure.fg!60,fill=structure.fg!13,line width=0.8pt] (0.75,-0.78) rectangle (3.35,0.18);
+        \node[align=center,font=\bfseries\scriptsize,text=structure.fg,text width=2.2cm] at (2.05,-0.30)
+            {Guided\\low-budget};
+
+        \node[align=left,font=\scriptsize,text=black!70,text width=8.1cm] at (7.90,-0.30)
+            {O. Anser, J. Francois, and I. Chrisment, IEEE/IFIP NOMS.\\
+             ``Auto-tuning of Hyper-parameters for Detecting\\Network Intrusions via Meta-learning.''};
+        }
+    \end{tikzpicture}%
+    }
 \end{frame}
 
 \begin{frame}{Acknowledgments}
